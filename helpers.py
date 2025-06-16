@@ -109,7 +109,8 @@ def sidorenko_ratio(H, W_block):
 def symmetrize(A):
     return (A + A.T) / 2
 
-def perturb(W, epsilon=0.001):
+def perturb(W):
+    epsilon = np.max(abs(W - 1)) / 20
     # Add small symmetric zero-mean noise
     perturbation = np.random.uniform(-epsilon, epsilon, size=W.shape)
     perturbation = symmetrize(perturbation)

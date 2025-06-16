@@ -28,7 +28,6 @@ def AMCS_graphon(H, initial_W, max_depth=8, max_level=6):
     """
     The Adaptive Monte Carlo Search algorithm adapted for graphon optimization.
     """
-    # The score to maximize is the negative absolute gap.
     score_function = lambda W: -abs(sidorenko_ratio(H, W)[0])
 
     print("--- Starting AMCS for Graphons ---")
@@ -39,35 +38,30 @@ def AMCS_graphon(H, initial_W, max_depth=8, max_level=6):
 
     depth = 0
     level = 1
-    
+
     # Main AMCS loop
     while level <= max_level:
-        # The number of steps in the local search can depend on the level
-        nmcs_steps = 10 * level  # More intense search at higher levels
+        if depth == 0:
+            print(f"\n--- Trying level {level} ---")
 
-        # Run the exploration phase (NMCS) to find a better candidate
+        nmcs_steps = 10 * level
+
+        # Run the exploration phase
         next_W = NMCS_graphon(H, current_W, steps=nmcs_steps, score_function=score_function)
         next_score = score_function(next_W)
 
-        print(f"Best score (lvl {level}, dpt {depth}, search steps {nmcs_steps}): {max(next_score, current_score):.4e}")
-        print("New best W:")
-        print(np.round(current_W, 3))
-
         # --- Adaptive Logic ---
         if next_score > current_score:
-            # Success! We found a better W. Accept it and reset depth.
             current_W = next_W.copy()
             current_score = next_score
-            depth = 0
-            # Optional: Can reset level to 1 here for a more aggressive search
-            # level = 1
+            depth = 0  # reset
         elif depth < max_depth:
-            # Failure, but we haven't exhausted our retries. Increment depth.
             depth += 1
         else:
-            # Failure, and retries are exhausted (max depth for this level). Increase level for a more powerful search.
             depth = 0
             level += 1
+
+    return current_W, abs(sidorenko_ratio(H, current_W)[0])
             
     # --- Final Results ---
     final_gap, _, _ = sidorenko_ratio(H, current_W)
