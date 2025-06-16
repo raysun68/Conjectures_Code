@@ -53,61 +53,69 @@ def average_degree(G_adj):
     total_degree = np.sum(G_adj)
     return total_degree / (n ** 2)
 
-def sidorenko_ratio(H_adj, G_adj):
-    # Computes p^|E(H)| / t - 1
-    t = compute_t_H_G_backtrack(H_adj, G_adj)
-    p = average_degree(G_adj)
-    num_edges_H = np.sum(H_adj) // 2
-    return (p ** num_edges_H / t - 1)
-def compute_t_G_W(H, W_block):
-    # Compute t for nxn graphon, brute force n^|V(H)| calculations
-    n = H.shape[0]
-    edges = [(i, j) for i in range(n) for j in range(i + 1, n) if H[i, j] == 1 or H[j, i] == 1]
-    num_blocks = W_block.shape[0]
-    block_volume = 1.0 / num_blocks
-    t = 0.0
-    for assignment in product(range(num_blocks), repeat=n):
-        prob = 1.0
-        for (u, v) in edges:
-            prob *= W_block[assignment[u], assignment[v]]
-        t += prob * (block_volume ** n)
-    return t
-
-def sidorenko_gap(H, W_block):
-    # Compute p^|E(H)| - t
-    t = compute_t_G_W(H, W_block)
+def sidorenko_ratio(H, W_block):
+    t = compute_log_t_G_W(H, W_block)
     p = np.mean(W_block)
     num_edges = int(np.sum(H) // 2)
-    return p**num_edges - t, t, p**num_edges
+    return p**num_edges / t - 1, t, p**num_edges
+
+def compute_t_H_W_log(H, W):
+    n_H = H.shape[0]
+    n_W = W.shape[0]
+    block_volume_log = -np.log(n_W)
+
+    # Find edges in upper triangle of H
+    edges = np.transpose(np.nonzero(np.triu(H, k=1)))
+
+    # Generate all assignments of n_H nodes to n_W nodes
+    # This is large: n_W^n_H assignments, so be careful for big sizes!
+    # We use itertools.product instead of expand.grid
+    import itertools
+    assignments = itertools.product(range(n_W), repeat=n_H)
+
+    log_terms = []
+
+    for a in assignments:
+        # a is a tuple with length n_H, each element in [0, n_W-1]
+        log_prob = 0.0
+        for (u, v) in edges:
+            w = W[a[u], a[v]]
+            if w <= 0:
+                # log(0) is -inf, assignment contributes nothing
+                log_prob = -np.inf
+                break
+            log_prob += np.log(w)
+        log_terms.append(log_prob)
+
+    # Use scipy.special.logsumexp for stable sum in log space
+    log_t = logsumexp(log_terms) + n_H * block_volume_log
+    return np.exp(log_t)
+
+def sidorenko_ratio(H, W):
+    t = compute_t_H_W_log(H, W)
+    p = W.mean()
+    m = H.sum() / 2
+    expected = p ** m
+    ratio = expected / t - 1
+    return ratio, t, expected
 
 def perturb(W):
     W_new = W.copy()
     n = W.shape[0]
 
-    # Flatten the indices of W into a list of (i, j) pairs
-    all_indices = [(i, j) for i in range(n) for j in range(n)]
+    # Randomly choose any (i, j) pair (including diagonals)
+    i = random.randint(0, n - 1)
+    j = random.randint(0, n - 1)
 
-    # Shuffle and pick 1 indice to increase by 0.005, then 1 indice to decrease by 0.005
-    random.shuffle(all_indices)
-    increase_indices = all_indices[:1]
-    decrease_indices = all_indices[1:2]
+    # Generate a small random perturbation
+    delta = random.uniform(-0.005, 0.005)
+    new_val = W_new[i, j] + delta
 
-    # Check that the proposed updates stay in [0, 1]
-    for i, j in increase_indices:
-        if W_new[i, j] + 0.005 > 1.0:
-            return W  # Reject and return original
+    if not (0.0 <= new_val <= 1.0):
+        return W  # Reject and return original
 
-    for i, j in decrease_indices:
-        if W_new[i, j] - 0.005 < 0.0:
-            return W  # Reject and return original
-
-    # Apply the updates
-    for i, j in increase_indices:
-        W_new[i, j] += 0.005
-    for i, j in decrease_indices:
-        W_new[i, j] -= 0.005
-
-    return W_new
+    W_new[i, j] = new_val
+    return W_new 
 ```
 
 ## Backtrack Homomorphism Counter Demo
@@ -217,34 +225,116 @@ print(f"Final Sidorenko gap: {best_gap:.3e}")
 Example: Start from 4x4 graphon with weight average p = 0.5:
 
 ```{python}
-W = np.array([
- [0.89, 0.49, 0.35, 0.5],
- [0.31, 0.78, 0.2, 0.59],
- [0.39, 0.71, 0.51, 0.2],
- [0.11, 0.87, 0.39, 0.68],
-])
+W = W_smoothed
 sidorenko_gap(H, W)
 ```
 
 After running loop for many iterations, approaches uniform weights and stabilizes here:
 
 ```{python}
-W_best = np.array([
-  [0.54, 0.47, 0.495, 0.485],
- [0.5, 0.495, 0.48, 0.515],
- [0.485, 0.53, 0.52, 0.46 ],
- [0.47, 0.495, 0.495, 0.535]
- ])
-sidorenko_gap(H, W_best)
+W_best = np.array(
+  [[0.7418,  0.7776,  0.75604, 0.75329],
+ [0.76117, 0.74064, 0.75544, 0.77148],
+ [0.75746, 0.75636, 0.74527, 0.76964],
+ [0.7683,  0.75413, 0.77197, 0.73432]]
+)
+sidorenko_ratio(H, W_best)
+def optimize_weights(H, W_init, sidorenko_ratio_fn, step=0.0001, max_calls=100):
+    W = W_init.copy()
+    n = W.shape[0]
+    flat_indices = [(i, j) for i in range(n) for j in range(n)]
+    calls = 0
+    no_change_round = 0
+
+    current_ratio, current_t, current_bound = sidorenko_ratio_fn(H, W)
+    calls += 1
+
+    pattern_updates = []
+    applying_pattern = False
+
+    while calls < max_calls and no_change_round < 2:
+        updated = False
+
+        if applying_pattern:
+            # Apply stored pattern in batch
+            W_trial = W.copy()
+            for (i, j, direction) in pattern_updates:
+                if direction == "+":
+                    W_trial[i, j] = min(W[i, j] + step, 1.0)
+                else:
+                    W_trial[i, j] = max(W[i, j] - step, 0.0)
+            new_ratio, _, _ = sidorenko_ratio_fn(H, W_trial)
+            calls += 1
+            if new_ratio > current_ratio:
+                W = W_trial
+                current_ratio = new_ratio
+                updated = True
+                print("Applied recorded pattern step")
+            else:
+                applying_pattern = False  # Stop applying if no gain
+        else:
+            # First coordinate descent phase
+            pattern_updates = []  # Clear previous pattern
+            for (i, j) in flat_indices:
+                improved = False
+
+                # Try increasing
+                while calls < max_calls:
+                    W_trial = W.copy()
+                    W_trial[i, j] = min(W[i, j] + step, 1.0)
+                    new_ratio, _, _ = sidorenko_ratio_fn(H, W_trial)
+                    calls += 1
+                    if new_ratio > current_ratio:
+                        W = W_trial
+                        current_ratio = new_ratio
+                        improved = True
+                        pattern_updates.append((i, j, "+"))
+                        print(f"Improved at ({i}, {j}) +")
+                    else:
+                        break
+
+                # Try decreasing
+                if not improved:
+                    while calls < max_calls:
+                        W_trial = W.copy()
+                        W_trial[i, j] = max(W[i, j] - step, 0.0)
+                        new_ratio, _, _ = sidorenko_ratio_fn(H, W_trial)
+                        calls += 1
+                        if new_ratio > current_ratio:
+                            W = W_trial
+                            current_ratio = new_ratio
+                            improved = True
+                            pattern_updates.append((i, j, "-"))
+                            print(f"Improved at ({i}, {j}) -")
+                        else:
+                            break
+
+                if improved:
+                    updated = True
+
+            if len(pattern_updates) > 0:
+                applying_pattern = True  # Switch to batch mode
+
+        if not updated:
+            no_change_round += 1
+        else:
+            no_change_round = 0
+
+    return W, current_ratio
+W_optimized, final_ratio = optimize_weights(H, W_best, sidorenko_ratio)
+print(W_optimized)
+print("Final score:", final_ratio)
 ```
 
 ```{python}
 W = W_best
-best_gap, best_t, best_p_e = sidorenko_gap(H, W)
+sidorenko_ratio(H, W_best)
+np.mean(W_best)
+best_gap, best_t, best_p_e = sidorenko_ratio(H, W)
 W_best = W.copy()  # initialize best
-for step in range(100):
+for step in range(200):
     W_new = perturb(W)
-    new_gap, new_t, new_p_e = sidorenko_gap(H, W_new)
+    new_gap, new_t, new_p_e = sidorenko_ratio(H, W_new)
     delta = abs(new_gap) - abs(best_gap)
 
     if delta < 0:
@@ -255,13 +345,116 @@ for step in range(100):
 
 # --- Final output
 print("\nFinal optimized W:")
-print(np.round(W_best, 3))  # <-- use W_best
-print(f"Final Sidorenko gap: {best_gap:.3e}")
+print(np.round(W_best, 4))  # <-- use W_best
+print(f"Final Sidorenko ratio: {best_gap:.3e}")
 ```
 
 Thoughts:
 
 1.  Changing only two weights would still affect 74% of the mappings in 4\*4 case, so just storing the last value of t and updating doesn't save much time. It saves over 50% of time for 5\*5 graphons, although 5^10^ is almost 10 times the value of 4^10^
-2.   For H with 10 vertices and 4\*4 graphon, the iterations already take a lot of time, and is exponential so approximate methods would be needed to explore cases like C4xC4 and 6\*6 graphons.
+2.  For H with 10 vertices and 4\*4 graphon, the iterations already take a lot of time, and is exponential so approximate methods would be needed to explore cases like C4xC4 and 6\*6 graphons.
 3.  In 4x4 case, weights approach the uniform case where Sidorenko gap = 0 as expected with the current random update strategy with fixed p, but maybe some better RL techniques could help find escape local maxima to find weight distributions that potentially cross 0.
-4.   Backtrack algorithm seems to give accurate numbers and is many times faster than brute force, but it is slower compared to Sagemath so it would be helpful if we could find how to make Sagemath algorithm work for \|V(H)\| \> 8.
+4.  Backtrack algorithm seems to give accurate numbers and is many times faster than brute force, but it is slower compared to Sagemath so it would be helpful if we could find how to make Sagemath algorithm work for \|V(H)\| \> 8.
+
+Sidorenko ratio:
+
+```{python}
+[[0.1   0.555 0.548 0.525]
+ [0.534 0.1   0.538 0.57 ]
+ [0.542 0.545 0.1   0.542]
+ [0.559 0.533 0.543 0.1  ]]
+
+[0.3, 0.8, 0.1, 0.2],
+  [0.6, 0.3, 0.8, 0.9],
+  [0.3, 0.7, 0.2, 0.1],
+  [0.9, 0.4, 0.1, 0.2]
+
+[[0.543 0.536 0.684 0.631]
+ [0.537 0.675 0.537 0.644]
+ [0.711 0.551 0.582 0.549]
+ [0.602 0.631 0.591 0.569]]
+ 
+ [0.2, 0.4, 0.3, 0.1],
+  [0.1, 0.2, 0.4, 0.3],
+  [0.4, 0.3, 0.1, 0.2],
+  [0.3, 0.1, 0.2, 0.4]
+
+[[0.269 0.338 0.296 0.239]
+ [0.24  0.26  0.341 0.302]
+ [0.34  0.292 0.252 0.259]
+ [0.294 0.251 0.255 0.344]]
+ 
+ [0.89, 0.49, 0.35, 0.5],
+ [0.31, 0.78, 0.2, 0.59],
+ [0.39, 0.71, 0.51, 0.2],
+ [0.11, 0.87, 0.39, 0.68],
+
+[[0.641 0.821 0.702 0.77 ]
+ [0.703 0.64  0.819 0.771]
+ [0.822 0.691 0.646 0.774]
+ [0.767 0.781 0.766 0.619]]
+
+[[0.7418  0.7776  0.75604 0.75329]
+ [0.76117 0.74064 0.75544 0.77148]
+ [0.75746 0.75636 0.74527 0.76964]
+ [0.7683  0.75413 0.77197 0.73432]]
+ 
+[[0.7570616031   0.7573413916   0.7571729541   0.75715156973 ]
+ [0.75721313223  0.7570527416   0.7571680666   0.757293579102]
+ [0.75718404785  0.7571754541   0.75708881348  0.7572792041  ]
+ [0.75726873535  0.75715793223  0.75729740723  0.7570032666  ]]
+ 
+[[0.7570616041   0.7573413906   0.7571729541   0.75715156973 ]
+ [0.75721313223  0.7570527416   0.7571680666   0.757293579102]
+ [0.75718404785  0.7571754541   0.75708881348  0.7572792041  ]
+ [0.75726873535  0.75715793223  0.75729740723  0.7570032666  ]]
+```
+
+\[\[0.582 0.849 0.694 0.78 \] \[0.692 0.601 0.826 0.781\] \[0.852 0.651 0.616 0.784\] \[0.778 0.801 0.766 0.558\]\]
+
+```{python}
+def smooth_weights_with_global_mean(W):
+    """
+    Given a 4x4 matrix W, return a new matrix where each entry is replaced with
+    the average of itself and the mean of all elements in W.
+    """
+    global_mean = np.mean(W)
+    W_smoothed = (W + global_mean) / 2
+    return W_smoothed
+W_smoothed = np.array(
+  [[0.7418,  0.7776,  0.75604, 0.75329],
+ [0.76117, 0.74064, 0.75544, 0.77148],
+ [0.75746, 0.75636, 0.74527, 0.76964],
+ [0.7683,  0.75413, 0.77197, 0.73432]]
+)
+W_smoothed = smooth_weights_with_global_mean(W_smoothed)
+print(W_smoothed)
+```
+
+```{python}
+```
+
+For higher precision:
+
+```{python}
+from scipy.special import logsumexp
+
+# Set numpy print options for high precision output (similar to options(digits=15))
+np.set_printoptions(precision=15, suppress=True)
+
+
+```
+
+Consider mixture of single weight disturbances, memory batch updates and smoothing towards group mean
+
+Task: Homomorphism density plot for any H graphon G , pick n random mappings and check homomorphisms how random sampling can approximate the density
+
+D\^2 then change all the entries larger than 1 to be 1
+
+Min V second neighborhood - first neighborhood
+
+Hope Max \< 0
+
+at least 0.6 is proved
+
+Start with directed cycle (very sparse graph)
