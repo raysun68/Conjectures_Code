@@ -5,7 +5,7 @@ from itertools import product
 from time import time
 from helpers import *
 
-def NMCS_graphon(H, current_W, steps, score_function):
+def NMCS_graphon(H, current_W, steps, score_function, epsilon):
     """
     This is the "growth" or exploration phase for graphons.
     It performs a local search for a fixed number of steps to find a better W.
@@ -15,7 +15,7 @@ def NMCS_graphon(H, current_W, steps, score_function):
 
     for _ in range(steps):
         # Always perturb from the best matrix found so far in this local search
-        candidate_W = perturb(best_W_local)
+        candidate_W = perturb(best_W_local, epsilon)
         candidate_score = score_function(candidate_W)
         
         if candidate_score > best_score_local:
@@ -24,7 +24,7 @@ def NMCS_graphon(H, current_W, steps, score_function):
             
     return best_W_local
 
-def AMCS_graphon(H, initial_W, max_depth=8, max_level=6):
+def AMCS_graphon(H, initial_W, max_depth=8, max_level=6, max_steps = 10, epsilon = 0.1):
     """
     The Adaptive Monte Carlo Search algorithm adapted for graphon optimization.
     """
@@ -39,22 +39,22 @@ def AMCS_graphon(H, initial_W, max_depth=8, max_level=6):
     depth = 0
     level = 1
 
-    # Main AMCS loop
     while level <= max_level:
-        if depth == 0:
-            print(f"\n--- Trying level {level} ---")
-
-        nmcs_steps = 10 * level
-
-        # Run the exploration phase
-        next_W = NMCS_graphon(H, current_W, steps=nmcs_steps, score_function=score_function)
+        nmcs_steps = max_steps * level
+        next_W = NMCS_graphon(H, current_W, steps=nmcs_steps, score_function=score_function, epsilon = epsilon)
         next_score = score_function(next_W)
 
-        # --- Adaptive Logic ---
+        if depth == 0:
+            print(f"\n--- Trying level {level} ---")
+            print(f"Best score (lvl {level}, dpt {depth}, search steps {nmcs_steps}): {max(next_score, current_score):.4e}")
+            print("Perturbation length: {epsilon}")
+            print("New best W:")
+            print(np.round(current_W, 3))
+
         if next_score > current_score:
             current_W = next_W.copy()
             current_score = next_score
-            depth = 0  # reset
+            depth = 0
         elif depth < max_depth:
             depth += 1
         else:
@@ -62,12 +62,3 @@ def AMCS_graphon(H, initial_W, max_depth=8, max_level=6):
             level += 1
 
     return current_W, abs(sidorenko_ratio(H, current_W)[0])
-            
-    # --- Final Results ---
-    final_gap, _, _ = sidorenko_ratio(H, current_W)
-    print("\n--- AMCS Finished ---")
-    print("Final optimized W:")
-    print(np.round(current_W, 5))
-    print(f"Final Sidorenko gap: {final_gap:.4e}")
-    
-    return current_W, final_gap
