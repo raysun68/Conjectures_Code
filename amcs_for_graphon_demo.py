@@ -53,7 +53,7 @@ if __name__ == "__main__":
     while no_improvement_runs < patience_limit:
         print(f"\n[AMCS Run] No improvement runs: {no_improvement_runs}")
         
-        W_candidate, _ = AMCS_graphon(H, best_W, max_depth= 8, max_level= 6, max_steps = 10, epsilon = cur_ep)
+        W_candidate, _ = AMCS_graphon(H, best_W, max_depth= 10, max_level= 8, max_steps = 6, epsilon = cur_ep)
         candidate_score = sidorenko_ratio(H, W_candidate)[0]
 
         if candidate_score > best_score:
@@ -63,7 +63,7 @@ if __name__ == "__main__":
             no_improvement_runs = 0
             np.savetxt("W_optimized.csv", best_W, delimiter=",")
             if cur_ep > min_length:
-              cur_ep *= 0.6
+              cur_ep *= 0.8
         else:
             no_improvement_runs += 1
             print(f"No improvement: {candidate_score:.4e} ≤ {best_score:.4e}")

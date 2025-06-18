@@ -48,11 +48,11 @@ Here is some notes on my modification of Iurii's AMCS code:
 
 1.  Run the script with `python amcs_for_graphon_demo.py` , main inputs and parameters to adjust are `H` , `W_initial` , `max_depth`, `max_level`, `max_steps`, `cur_ep`, `min_length` .
 
-2.  Each perturbation step is a random 4\*4 matrix with length (L2 norm) `cur_ep`. From the current best W, the algorithm makes `level` \* `ep` random steps until returning to the current best W and letting `depth` + 1. When `depth` reaches `max_depth` , it resets to 0 and lets `level` + 1. When an improvement is found, `depth` is reset to 0 without increasing `level`. When `level` reaches `max_level`, `ep` becomes 60% of its original value since the current step may be too large.
+2.  Each perturbation step is a random 4\*4 matrix with length (L2 norm) `cur_ep`. After an improving step is found, the next step begins from using 100%, then 90%... of the last successful step mixed with a random step for the first 10 tries. From the current best W, the algorithm makes `level` \* `ep` random steps to search for an improvement, then `depth` + 1. When `depth` reaches `max_depth` , it resets to 0 and lets `level` + 1. When an improvement is found, `depth` is reset to 0 without increasing `level`. When `level` reaches `max_level`, `ep` becomes 80% of its original value (or 60% if there has been no improvement in the last cycle) since the current step may be too large.
 
-3.  Currently the weights stabilize after around 10-15 minutes, while the loop reaches an ending criteria after around an hour. It exits the loop when $\left \lVert W - 1 \right \rVert_\infty < \frac{1}{4m}$ or 3 full loops are run without any improvement. When the first condition is met, usually a Sidorneko ratio around $10^{-8}$ is reached.
+3.  Currently the weights stabilize after around 10-15 minutes, while the loop reaches an ending criteria after around an hour. It exits the loop when $\left \lVert W - 1 \right \rVert_\infty < \frac{1}{4m}$ or 3 full loops are run without any improvement. When the first condition is met, usually a Sidorenko ratio around $1.5*10^{-8}$ to $3* 10^{-8}$ is reached.
 
-    This is much smaller than that of a random matrix of similar distance to the uniform weight matrix, but it's yet to be determined if there is some special structure to be found for these optimized matrices and if it holds clues for patterns close to violation.
+    This is much smaller than that of a random matrix of similar distance to the uniform weight matrix (around order of $10^{-4}$), but it's yet to be determined if there is some special structure to be found for these optimized matrices and if it holds clues for patterns close to violation.
 
 Potential next steps: H could be changed to test other graphs with 12 or less nodes that haven't been verified, or W could be changed to a 5\*5 graphon (should converge in a few hours with the current framework).
 
@@ -80,7 +80,7 @@ W = np.array([
 [1.003520601558819392e+00,9.984762602095663686e-01,9.974048044071606167e-01,1.000597309012188241e+00]
 ])
 np.round(W, 4)
-sidorenko_ratio(H, W)
+print(sidorenko_ratio(H, W))
 #W_initial = np.array([[0.1, 1.1, 1.3, 1.2],
 #[1.1, 1.3, 0.4, 1.1],
 #[1.3, 0.4, 0.9, 1.2],
@@ -97,7 +97,7 @@ W = np.array([
 [1.010617752083826870e+00,9.835060697754934855e-01,1.000429702032327395e+00,1.005473675933807876e+00]
 ])
 np.round(W, 4)
-sidorenko_ratio(H, W)
+print(sidorenko_ratio(H, W))
 #W_initial = np.array([[0.1, 1.1, 1.3, 0.8],
 #[1.1, 0.5, 0.4, 1.1],
 #[1.3, 0.4, 0.9, 1.2],
@@ -114,7 +114,7 @@ W = np.array([
 [9.838745226963234725e-01,1.009638083189973834e+00,1.000195910494968476e+00,1.006273272364560212e+00]
 ])
 np.round(W, 4)
-sidorenko_ratio(H, W)
+print(sidorenko_ratio(H, W))
 #W_initial = np.array([[0.1, 1.1, 1.3, 1.2],
 #    [1.1, 1.3, 0.4, 1.1],
 #    [1.3, 0.4, 0.9, 1.2],
@@ -132,7 +132,7 @@ W = np.array([
 [1.001630615749603770e+00,1.001558727266020687e+00,1.012914183393865297e+00,9.838881937406414036e-01]
 ])
 np.round(W, 4)
-sidorenko_ratio(H, W)
+print(sidorenko_ratio(H, W))
 #W_initial = np.array([
     #[0.9, 1.1, 1.3, 0.8],
     #[1.1, 0.5, 0.4, 1.4],
@@ -151,7 +151,7 @@ W = np.array([
 [1.013558287856340057e+00,1.001860064505293524e+00,1.001089088428382290e+00,9.835048298892703489e-01]
 ])
 np.round(W, 4)
-sidorenko_ratio(H, W)
+print(sidorenko_ratio(H, W))
 #W_initial = np.array([[0.1, 1.1, 1.3, 1.2],
    # [1.1, 1.3, 0.4, 1.1],
    # [1.3, 0.4, 0.9, 1.2],
@@ -168,7 +168,7 @@ W = np.array([
 [1.000841600065852210e+00,9.851842122305812799e-01,9.974714161286379888e-01,1.016504595617770290e+00]
 ])
 np.round(W, 4)
-sidorenko_ratio(H, W)
+print(sidorenko_ratio(H, W))
 #W_initial = np.array([
     #[0.9, 1.1, 1.3, 0.8],
     #[1.1, 0.5, 0.4, 1.4],
@@ -180,6 +180,22 @@ sidorenko_ratio(H, W)
 #AMCS_graphon(H, best_W, max_depth= 8, max_level= 10, max_steps = 5, epsilon = 0.3)
 # min_length = 0.0004
 #Total elapsed time: 4691.44 seconds
+
+W = np.array([
+  [9.981881920952020426e-01,9.960787975368707858e-01,9.916104719947598234e-01,1.014137493442902382e+00],
+[9.960787975368707858e-01,9.933978260588319786e-01,1.001361925434438804e+00,1.009160644897071579e+00],
+[9.916104719947598234e-01,1.001361925434438804e+00,1.016594404767061866e+00,9.904346735719898875e-01],
+[1.014137493442902382e+00,1.009160644897071579e+00,9.904346735719898875e-01,9.862515633228388090e-01]
+])
+sidorenko_ratio(H, W)
+#W_initial = np.array([[0.8, 1.1, 1.3, 1.2],
+   # [1.1, 1.3, 0.4, 1.1],
+  #  [1.3, 0.4, 0.4, 1.2],
+  #  [1.2, 1.1, 1.2, 0.2]])
+#Early stopping: max|W - 1| < 0.0167
+#AMCS_graphon(H, best_W, max_depth= 12, max_level= 8, max_steps = 5, epsilon = cur_ep)
+#Search complete. Best Sidorenko ratio: -2.0376e-08
+#Total elapsed time: 2876.20 seconds
 ```
 
 Optimization results from previous versions of AMCS, stretched/ shrunk to the same scale to compare their ratios
@@ -235,3 +251,17 @@ W = np.array([
 ])
 sidorenko_ratio(H, stretch(W, 1 / (60 * np.max(abs(W - 1)))))
 ```
+
+Local minimizers, other H to try, expand graph H
+
+Robert: EFX code
+
+Kevin: Memory out of bounds, filtering DP out of zero. Fixed the DP
+
+Kate: Second neighborhood
+
+Iurii: Penalty for 100 times for the normal one, second neighborhood 3 sinks in cycle. Look at what to generate
+
+(Change it to delete edges and add edges somewhere else, look at large sparse graph)
+
+Yasir: 3\*4 on 6\*6, fix entries and don't do it randomly, making it fixed graph at the beginning. Keep checking on the random sample idea, see when it has positive densities, apply to sidorenko
