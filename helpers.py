@@ -116,8 +116,8 @@ def perturb(W, epsilon):
     perturbation -= np.mean(perturbation)
 
     W_new = W + perturbation
-    W_new = W_new / np.mean(W_new)  # Ensure values remain in [0, 1]
-    return W_new
+    W_new = W_new / np.mean(W_new)  # Ensure normalization
+    return W_new, perturbation
 
 def optimize_graphon(H, W, steps=100):
     best_gap, best_t, best_p_e = sidorenko_ratio(H, W)

@@ -46,13 +46,14 @@ if __name__ == "__main__":
     best_W = W_initial.copy()
     best_score = sidorenko_ratio(H, best_W)[0]
     cur_ep = 0.3
+    min_length = 0.0004
     m = np.sum(H) // 2 # Test local condition
     start_time = time()
 
     while no_improvement_runs < patience_limit:
         print(f"\n[AMCS Run] No improvement runs: {no_improvement_runs}")
         
-        W_candidate, _ = AMCS_graphon(H, best_W, max_depth= 8, max_level= 8, max_steps = 8, epsilon = cur_ep)
+        W_candidate, _ = AMCS_graphon(H, best_W, max_depth= 8, max_level= 6, max_steps = 10, epsilon = cur_ep)
         candidate_score = sidorenko_ratio(H, W_candidate)[0]
 
         if candidate_score > best_score:
@@ -61,11 +62,12 @@ if __name__ == "__main__":
             best_score = candidate_score
             no_improvement_runs = 0
             np.savetxt("W_optimized.csv", best_W, delimiter=",")
-            cur_ep *= 0.9
+            if cur_ep > min_length:
+              cur_ep *= 0.6
         else:
             no_improvement_runs += 1
             print(f"No improvement: {candidate_score:.4e} ≤ {best_score:.4e}")
-            if cur_ep > 0.001:
+            if cur_ep > min_length:
               cur_ep *= 0.6
         if np.max(np.abs(best_W - 1)) < 1 / (4 * m):
             print(f"Early stopping: max|W - 1| < {1/(4 * m):.4f}")

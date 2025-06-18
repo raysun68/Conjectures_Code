@@ -7,21 +7,38 @@ from helpers import *
 
 def NMCS_graphon(H, current_W, steps, score_function, epsilon):
     """
-    This is the "growth" or exploration phase for graphons.
-    It performs a local search for a fixed number of steps to find a better W.
+    Growth phase for graphons.
+    Applies gradually decaying reuse of last successful perturbation.
     """
     best_W_local = current_W.copy()
     best_score_local = score_function(best_W_local)
 
-    for _ in range(steps):
-        # Always perturb from the best matrix found so far in this local search
-        candidate_W = perturb(best_W_local, epsilon)
+    last_successful_perturbation = None
+    reuse_decay_counter = 0
+
+    for step in range(steps):
+        _, random_perturb = perturb(best_W_local, epsilon)
+
+        if last_successful_perturbation is not None:
+            alpha = min(1.0, reuse_decay_counter / 10)
+            perturbation = alpha * random_perturb + (1 - alpha) * last_successful_perturbation
+        else:
+            perturbation = random_perturb
+
+        candidate_W = best_W_local + perturbation
+        candidate_W = symmetrize(candidate_W)
+        candidate_W /= np.mean(candidate_W)
+
         candidate_score = score_function(candidate_W)
-        
+
         if candidate_score > best_score_local:
             best_W_local = candidate_W
             best_score_local = candidate_score
-            
+            last_successful_perturbation = perturbation
+            reuse_decay_counter = 0
+        else:
+            reuse_decay_counter += 1
+
     return best_W_local
 
 def AMCS_graphon(H, initial_W, max_depth=8, max_level=6, max_steps = 10, epsilon = 0.1):
@@ -47,7 +64,7 @@ def AMCS_graphon(H, initial_W, max_depth=8, max_level=6, max_steps = 10, epsilon
         if depth == 0:
             print(f"\n--- Trying level {level} ---")
             print(f"Best score (lvl {level}, dpt {depth}, search steps {nmcs_steps}): {max(next_score, current_score):.4e}")
-            print("Perturbation length: {epsilon}")
+            print(f"Perturbation length: {epsilon}")
             print("New best W:")
             print(np.round(current_W, 3))
 
