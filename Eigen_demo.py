@@ -31,14 +31,15 @@ if __name__ == "__main__":
 
     ''' ---- Load initial W ---- '''
     
-    W_initial = np.random.rand(8, 8)
+    W_initial = np.random.rand(6, 6)
+    W_initial = W_initial / np.mean(W_initial)
    # W_initial = np.random.uniform(0, 2, size=W.shape)
    # W_initial = symmetrize(W_initial)
    # W_initial -= (np.mean(W_initial) - 1)
    # W_initial = np.loadtxt("W_optimized.csv", delimiter=",")
 
     ''' ---- Iterative AMCS Loop ---- '''
-    patience_limit = 5
+    patience_limit = 6
     no_improvement_runs = 0
     best_W = W_initial.copy()
     best_score = sidorenko_eigenvalue_check(best_W)
@@ -50,7 +51,7 @@ if __name__ == "__main__":
     while no_improvement_runs < patience_limit:
         print(f"\n[AMCS Run] No improvement runs: {no_improvement_runs}")
         
-        W_candidate, _ = AMCS_graphon(H, best_W, max_depth= 20, max_level= 10, max_steps = 10, epsilon = cur_ep)
+        W_candidate, _ = AMCS_graphon(H, best_W, max_depth= 30, max_level= 6, max_steps = 10, epsilon = cur_ep)
         candidate_score = sidorenko_eigenvalue_check(W_candidate)
 
         if candidate_score > best_score:

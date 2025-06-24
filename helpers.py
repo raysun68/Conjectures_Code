@@ -193,4 +193,4 @@ def sidorenko_eigenvalue_check(M):
     eigenvalues = np.linalg.eigvalsh(tilde_M)
     lhs = np.sum(eigenvalues**5)
     rhs = (np.sum(M))**15 / (M.size)**10
-    return np.log(rhs / lhs)
+    return (rhs - lhs)
