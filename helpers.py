@@ -5,6 +5,9 @@ from itertools import product
 from numba import njit  # library to optimize performance
 
 def count_homomorphisms_backtrack(H_adj, G_adj):
+    """
+    Counts the number of homomorphisms from graph H to graph G using backtracking.
+    """
     h = H_adj.shape[0]
     g = G_adj.shape[0]
     count = 0
@@ -31,52 +34,49 @@ def count_homomorphisms_backtrack(H_adj, G_adj):
     return count
 
 def compute_t_H_G_backtrack(H_adj, G_adj):
+    """
+    Computes the homomorphism density t(H,G) via explicit enumeration.
+    """
     g = G_adj.shape[0]
     total_maps = g ** H_adj.shape[0]
     hom_count = count_homomorphisms_backtrack(H_adj, G_adj)
     return hom_count / total_maps
 
 def average_degree(G_adj):
+    """
+    Returns the average edge density of the adjacency matrix G_adj.
+    """
     n = G_adj.shape[0]
     total_degree = np.sum(G_adj)
     return total_degree / (n ** 2)
 
-
-@njit # numba decorator
+@njit
 def _compute_t_recursive(n, edges, W_block, assignment, pos):
     """
-    A Numba-friendly recursive helper to replace itertools.product.
-    This function calculates the sum of probabilities for all possible assignments.
+    Recursively computes the weighted contribution of all vertex mappings
+    to t(H, W), assuming H has edges `edges`, and W is a stochastic block matrix.
     """
-    # Base Case: If the assignment is fully built (pos == n)
     if pos == n:
-        # Calculate the probability for this one complete assignment
         prob = 1.0
         for i in range(len(edges)):
             u, v = edges[i]
             prob *= W_block[assignment[u], assignment[v]]
         return prob
 
-    # Recursive Step: Iterate through possibilities for the current position
     total_prob = 0.0
     num_blocks = W_block.shape[0]
     for i in range(num_blocks):
         assignment[pos] = i
-        # Recurse to fill the next position and add the result
         total_prob += _compute_t_recursive(n, edges, W_block, assignment, pos + 1)
     
     return total_prob
 
-@njit # numba decorator
+@njit
 def compute_t_G_W(H, W_block):
     """
-    This function uses the recursive helper to perform its calculation
-    in a Numba-compatible way.
+    Computes t(H, W_block), the homomorphism density of H into a graphon W.
     """
     n = H.shape[0]
-    
-    # Create a list of edges.
-    # Creating a numpy array for numba
     edge_list = []
     for i in range(n):
         for j in range(i + 1, n):
@@ -86,8 +86,6 @@ def compute_t_G_W(H, W_block):
 
     num_blocks = W_block.shape[0]
     block_volume = 1.0 / num_blocks
-    
-    # call to the recursive function
     assignment = np.zeros(n, dtype=np.int64)
     total_prob_sum = _compute_t_recursive(n, edges, W_block, assignment, 0)
     
@@ -95,69 +93,64 @@ def compute_t_G_W(H, W_block):
     return t
 
 def sidorenko_gap(H, W_block):
+    """
+    Computes the Sidorenko gap: p^e(H) - t(H, W) and returns (gap, t, p^e).
+    """
     t = compute_t_G_W(H, W_block)
     p = np.mean(W_block)
     num_edges = int(np.sum(H) // 2)
     return p ** num_edges - t, t, p ** num_edges
 
 def sidorenko_ratio(H, W_block):
+    """
+    Computes log(p^e(H)/t(H, W)), used to quantify Sidorenko ratio violation.
+    """
     t = compute_t_G_W(H, W_block)
     p = np.mean(W_block)
     num_edges = int(np.sum(H) // 2)
     return np.log(p ** num_edges / t), t, p ** num_edges
 
 def symmetrize(A):
+    """
+    Returns a symmetrized version of matrix A.
+    """
     return (A + A.T) / 2
 
 def perturb(W, epsilon):
-    # Add small symmetric zero-mean noise
+    """
+    Applies symmetric zero-mean perturbation to W, normalized to preserve mean.
+    """
     perturbation = np.random.uniform(-epsilon, epsilon, size=W.shape)
     perturbation = symmetrize(perturbation)
     perturbation -= np.mean(perturbation)
 
     W_new = W + perturbation
-    W_new = W_new / np.mean(W_new)  # Ensure normalization
+    W_new = W_new / np.mean(W_new)
     return W_new, perturbation
 
 def perturb_Eigen(W, epsilon, max_attempts=5000):
     """
-    Add asymmetric, zero-mean perturbation to W,
-    rejecting any that lead to negative entries.
+    Applies asymmetric perturbation to W and rejects matrices with negative entries.
     """
     original_mean = np.mean(W)
 
     for _ in range(max_attempts):
         perturbation = np.random.uniform(-epsilon, epsilon, size=W.shape)
         perturbation -= np.mean(perturbation)
-
         W_new = W + perturbation
 
         if np.all(W_new >= 0):
-            # Renormalize to preserve original mean
             new_mean = np.mean(W_new)
             if new_mean > 0:
                 W_new *= (original_mean / new_mean)
             return W_new, perturbation
+
     raise RuntimeError("Failed to generate a valid perturbation without negative entries.")
 
-def optimize_graphon(H, W, steps=100):
-    best_gap, best_t, best_p_e = sidorenko_ratio(H, W)
-    W_best = W.copy()
-
-    for step in range(steps):
-        W_new = perturb(W)
-        new_gap, new_t, new_p_e = sidorenko_ratio(H, W_new)
-        delta = abs(new_gap) - abs(best_gap)
-
-        if delta < 0:
-            W = W_new
-            if abs(new_gap) < abs(best_gap):
-                W_best = W.copy()
-                best_gap, best_t, best_p_e = new_gap, new_t, new_p_e
-
-    return W_best, best_gap, best_t, best_p_e
-  
 def build_tilde_M(M):
+    """
+    Constructs the tilde_M matrix from M for the spectral version of Sidorenko checking.
+    """
     m, n = M.shape
     mn = m * n
     tilde_M = np.zeros((mn, mn))
@@ -177,8 +170,10 @@ def build_tilde_M(M):
 
     return tilde_M
 
-
 def sidorenko_eigenvalue_check(M):
+    """
+    Spectral test for Sidorenko-type inequalities using tilde_M eigenvalue moments.
+    """
     M = np.maximum(M, 0)
     M = np.nan_to_num(M, nan=0.0, posinf=1.0, neginf=0.0)
 
@@ -193,4 +188,4 @@ def sidorenko_eigenvalue_check(M):
     eigenvalues = np.linalg.eigvalsh(tilde_M)
     lhs = np.sum(eigenvalues**5)
     rhs = (np.sum(M))**15 / (M.size)**10
-    return (rhs - lhs)
+    return ((rhs / lhs - 1) ** 3) # Reward function that can be modified
