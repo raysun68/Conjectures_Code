@@ -119,6 +119,27 @@ def perturb(W, epsilon):
     W_new = W_new / np.mean(W_new)  # Ensure normalization
     return W_new, perturbation
 
+def perturb_Eigen(W, epsilon, max_attempts=5000):
+    """
+    Add asymmetric, zero-mean perturbation to W,
+    rejecting any that lead to negative entries.
+    """
+    original_mean = np.mean(W)
+
+    for _ in range(max_attempts):
+        perturbation = np.random.uniform(-epsilon, epsilon, size=W.shape)
+        perturbation -= np.mean(perturbation)
+
+        W_new = W + perturbation
+
+        if np.all(W_new >= 0):
+            # Renormalize to preserve original mean
+            new_mean = np.mean(W_new)
+            if new_mean > 0:
+                W_new *= (original_mean / new_mean)
+            return W_new, perturbation
+    raise RuntimeError("Failed to generate a valid perturbation without negative entries.")
+
 def optimize_graphon(H, W, steps=100):
     best_gap, best_t, best_p_e = sidorenko_ratio(H, W)
     W_best = W.copy()
@@ -135,3 +156,41 @@ def optimize_graphon(H, W, steps=100):
                 best_gap, best_t, best_p_e = new_gap, new_t, new_p_e
 
     return W_best, best_gap, best_t, best_p_e
+  
+def build_tilde_M(M):
+    m, n = M.shape
+    mn = m * n
+    tilde_M = np.zeros((mn, mn))
+
+    for a in range(m):
+        for b in range(n):
+            for c in range(m):
+                for d in range(n):
+                    idx1 = a * n + b
+                    idx2 = c * n + d
+                    M_cb = M[c, b]
+                    M_ab = M[a, b]
+                    M_cd = M[c, d]
+                    M_ad = M[a, d]
+                    product = max(M_ab * M_cd, 0)
+                    tilde_M[idx1, idx2] = M_cb * np.sqrt(product) * M_ad
+
+    return tilde_M
+
+
+def sidorenko_eigenvalue_check(M):
+    M = np.maximum(M, 0)
+    M = np.nan_to_num(M, nan=0.0, posinf=1.0, neginf=0.0)
+
+    tilde_M = build_tilde_M(M)
+
+    if not np.all(np.isfinite(tilde_M)):
+        raise ValueError("tilde_M contains non-finite values!")
+
+    if not np.allclose(tilde_M, tilde_M.T, atol=1e-10):
+        print("Warning: tilde_M is not symmetric")
+
+    eigenvalues = np.linalg.eigvalsh(tilde_M)
+    lhs = np.sum(eigenvalues**5)
+    rhs = (np.sum(M))**15 / (M.size)**10
+    return np.log(rhs / lhs)
