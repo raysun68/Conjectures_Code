@@ -44,7 +44,7 @@ def AMCS_graphon(H, initial_W, max_depth=8, max_level=6, max_steps = 10, epsilon
     """
     The Adaptive Monte Carlo Search algorithm adapted for graphon optimization.
     """
-    score_function = lambda W: -abs(sidorenko_eigenvalue_check(W))
+    score_function = lambda W: sidorenko_eigenvalue_check(W)
 
     print("--- Starting AMCS for Graphons ---")
     current_W = initial_W.copy()
