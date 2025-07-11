@@ -7,38 +7,22 @@ from helpers import *
 
 def NMCS_graphon(H, current_W, steps, score_function, epsilon):
     """
-    Growth phase for graphons.
-    Applies gradually decaying reuse of last successful perturbation.
+    Monte Carlo search with multiplicative 3x3 subgrid perturbations.
     """
-    best_W_local = current_W.copy()
-    best_score_local = score_function(best_W_local)
-
-    last_successful_perturbation = None
-    reuse_decay_counter = 0
+    best_W = current_W.copy()
+    best_score = score_function(best_W)
+    rng = np.random.default_rng()
 
     for step in range(steps):
-        _, random_perturb = perturb_Eigen(best_W_local, epsilon)
-
-        if last_successful_perturbation is not None:
-            alpha = min(1.0, reuse_decay_counter / 10)
-            perturbation = alpha * random_perturb + (1 - alpha) * last_successful_perturbation
-        else:
-            perturbation = random_perturb
-
-        candidate_W = best_W_local + perturbation
-        candidate_W /= np.mean(candidate_W)
-
+        candidate_W, _ = perturb_Eigen(current_W, epsilon)
         candidate_score = score_function(candidate_W)
 
-        if candidate_score > best_score_local:
-            best_W_local = candidate_W
-            best_score_local = candidate_score
-            last_successful_perturbation = perturbation
-            reuse_decay_counter = 0
-        else:
-            reuse_decay_counter += 1
+        if candidate_score > best_score:
+            best_W = candidate_W
+            best_score = candidate_score
 
-    return best_W_local
+    return best_W
+
 
 def AMCS_graphon(H, initial_W, max_depth=8, max_level=6, max_steps = 10, epsilon = 0.1):
     """
@@ -61,11 +45,24 @@ def AMCS_graphon(H, initial_W, max_depth=8, max_level=6, max_steps = 10, epsilon
         next_score = score_function(next_W)
 
         if depth == 0:
-            print(f"\n--- Trying level {level} ---")
-            print(f"Best score (lvl {level}, dpt {depth}, search steps {nmcs_steps}): {max(next_score, current_score):.4e}")
-            print(f"Perturbation length: {epsilon}")
-            print("New best W:")
-            print(np.round(current_W, 3))
+          print(f"\n--- Trying level {level} ---")
+          print(f"Best score (lvl {level}, dpt {depth}, search steps {nmcs_steps}): {max(next_score, current_score):.4e}")
+          print(f"Perturbation length: {epsilon}")
+          print("New best W:")
+          print(np.round(current_W, 3))
+
+              # --- Evaluate score under a slightly contracted W (p = 0.99) ---
+          p = 0.99
+          W_stretched = current_W + (p - 1) * (current_W - np.mean(current_W))
+          try:
+              score_stretched = sidorenko_eigenvalue_check(W_stretched)
+              if current_score != 0:
+                  ratio = score_stretched / current_score
+              else:
+                  ratio = float('inf') if score_stretched != 0 else 1.0
+              print(f"Score ratio of W_stretched (p={p}) vs current_W: {ratio:.4e}")
+          except Exception as e:
+              print(f"Failed to evaluate stretched W: {e}")
 
         if next_score > current_score:
             current_W = next_W.copy()

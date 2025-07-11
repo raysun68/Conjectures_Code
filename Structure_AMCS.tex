@@ -1,0 +1,756 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\PassOptionsToPackage{dvipsnames,svgnames,x11names}{xcolor}
+%
+\documentclass[
+  letterpaper,
+  DIV=11,
+  numbers=noendperiod]{scrartcl}
+
+\usepackage{amsmath,amssymb}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else  
+    % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+% Make \paragraph and \subparagraph free-standing
+\makeatletter
+\ifx\paragraph\undefined\else
+  \let\oldparagraph\paragraph
+  \renewcommand{\paragraph}{
+    \@ifstar
+      \xxxParagraphStar
+      \xxxParagraphNoStar
+  }
+  \newcommand{\xxxParagraphStar}[1]{\oldparagraph*{#1}\mbox{}}
+  \newcommand{\xxxParagraphNoStar}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+  \let\oldsubparagraph\subparagraph
+  \renewcommand{\subparagraph}{
+    \@ifstar
+      \xxxSubParagraphStar
+      \xxxSubParagraphNoStar
+  }
+  \newcommand{\xxxSubParagraphStar}[1]{\oldsubparagraph*{#1}\mbox{}}
+  \newcommand{\xxxSubParagraphNoStar}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+\makeatother
+
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{241,243,245}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.68,0.00,0.00}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.37,0.37,0.37}{#1}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.40,0.45,0.13}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.68,0.00,0.00}{#1}}
+\newcommand{\BuiltInTok}[1]{\textcolor[rgb]{0.00,0.23,0.31}{#1}}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.13,0.47,0.30}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.37,0.37,0.37}{#1}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.37,0.37,0.37}{\textit{#1}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.00,0.23,0.31}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.68,0.00,0.00}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.68,0.00,0.00}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.37,0.37,0.37}{\textit{#1}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.68,0.00,0.00}{#1}}
+\newcommand{\ExtensionTok}[1]{\textcolor[rgb]{0.00,0.23,0.31}{#1}}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.68,0.00,0.00}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.28,0.35,0.67}{#1}}
+\newcommand{\ImportTok}[1]{\textcolor[rgb]{0.00,0.46,0.62}{#1}}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.37,0.37,0.37}{#1}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.23,0.31}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{\textcolor[rgb]{0.00,0.23,0.31}{#1}}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.37,0.37,0.37}{#1}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.00,0.23,0.31}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.68,0.00,0.00}{#1}}
+\newcommand{\RegionMarkerTok}[1]{\textcolor[rgb]{0.00,0.23,0.31}{#1}}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.37,0.37,0.37}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.13,0.47,0.30}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.13,0.47,0.30}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.07,0.07,0.07}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.13,0.47,0.30}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.37,0.37,0.37}{\textit{#1}}}
+
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}\usepackage{longtable,booktabs,array}
+\usepackage{calc} % for calculating minipage widths
+% Correct order of tables after \paragraph or \subparagraph
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd\longtable{\par}{\if@noskipsec\mbox{}\fi\par}{}{}
+\makeatother
+% Allow footnotes in longtable head/foot
+\IfFileExists{footnotehyper.sty}{\usepackage{footnotehyper}}{\usepackage{footnote}}
+\makesavenoteenv{longtable}
+\usepackage{graphicx}
+\makeatletter
+\newsavebox\pandoc@box
+\newcommand*\pandocbounded[1]{% scales image to fit in text height/width
+  \sbox\pandoc@box{#1}%
+  \Gscale@div\@tempa{\textheight}{\dimexpr\ht\pandoc@box+\dp\pandoc@box\relax}%
+  \Gscale@div\@tempb{\linewidth}{\wd\pandoc@box}%
+  \ifdim\@tempb\p@<\@tempa\p@\let\@tempa\@tempb\fi% select the smaller of both
+  \ifdim\@tempa\p@<\p@\scalebox{\@tempa}{\usebox\pandoc@box}%
+  \else\usebox{\pandoc@box}%
+  \fi%
+}
+% Set default figure placement to htbp
+\def\fps@figure{htbp}
+\makeatother
+
+\KOMAoption{captions}{tableheading}
+\makeatletter
+\@ifpackageloaded{caption}{}{\usepackage{caption}}
+\AtBeginDocument{%
+\ifdefined\contentsname
+  \renewcommand*\contentsname{Table of contents}
+\else
+  \newcommand\contentsname{Table of contents}
+\fi
+\ifdefined\listfigurename
+  \renewcommand*\listfigurename{List of Figures}
+\else
+  \newcommand\listfigurename{List of Figures}
+\fi
+\ifdefined\listtablename
+  \renewcommand*\listtablename{List of Tables}
+\else
+  \newcommand\listtablename{List of Tables}
+\fi
+\ifdefined\figurename
+  \renewcommand*\figurename{Figure}
+\else
+  \newcommand\figurename{Figure}
+\fi
+\ifdefined\tablename
+  \renewcommand*\tablename{Table}
+\else
+  \newcommand\tablename{Table}
+\fi
+}
+\@ifpackageloaded{float}{}{\usepackage{float}}
+\floatstyle{ruled}
+\@ifundefined{c@chapter}{\newfloat{codelisting}{h}{lop}}{\newfloat{codelisting}{h}{lop}[chapter]}
+\floatname{codelisting}{Listing}
+\newcommand*\listoflistings{\listof{codelisting}{List of Listings}}
+\makeatother
+\makeatletter
+\makeatother
+\makeatletter
+\@ifpackageloaded{caption}{}{\usepackage{caption}}
+\@ifpackageloaded{subcaption}{}{\usepackage{subcaption}}
+\makeatother
+
+\usepackage{bookmark}
+
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same} % disable monospaced font for URLs
+\hypersetup{
+  pdftitle={AMCS\_Optimizer},
+  pdfauthor={Raymond Sun},
+  colorlinks=true,
+  linkcolor={blue},
+  filecolor={Maroon},
+  citecolor={Blue},
+  urlcolor={Blue},
+  pdfcreator={LaTeX via pandoc}}
+
+
+\title{AMCS\_Optimizer}
+\author{Raymond Sun}
+\date{2025-06-17}
+
+\begin{document}
+\maketitle
+
+
+\subsection{Helper Functions}\label{helper-functions}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\ImportTok{import}\NormalTok{ numpy }\ImportTok{as}\NormalTok{ np}
+\ImportTok{import}\NormalTok{ itertools}
+\ImportTok{from}\NormalTok{ itertools }\ImportTok{import}\NormalTok{ product}
+\ImportTok{import}\NormalTok{ random}
+\KeywordTok{def}\NormalTok{ build\_tilde\_M(M):}
+\NormalTok{    m, n }\OperatorTok{=}\NormalTok{ M.shape}
+\NormalTok{    mn }\OperatorTok{=}\NormalTok{ m }\OperatorTok{*}\NormalTok{ n}
+\NormalTok{    tilde\_M }\OperatorTok{=}\NormalTok{ np.zeros((mn, mn))}
+
+    \ControlFlowTok{for}\NormalTok{ a }\KeywordTok{in} \BuiltInTok{range}\NormalTok{(m):}
+        \ControlFlowTok{for}\NormalTok{ b }\KeywordTok{in} \BuiltInTok{range}\NormalTok{(n):}
+            \ControlFlowTok{for}\NormalTok{ c }\KeywordTok{in} \BuiltInTok{range}\NormalTok{(m):}
+                \ControlFlowTok{for}\NormalTok{ d }\KeywordTok{in} \BuiltInTok{range}\NormalTok{(n):}
+\NormalTok{                    idx1 }\OperatorTok{=}\NormalTok{ a }\OperatorTok{*}\NormalTok{ n }\OperatorTok{+}\NormalTok{ b}
+\NormalTok{                    idx2 }\OperatorTok{=}\NormalTok{ c }\OperatorTok{*}\NormalTok{ n }\OperatorTok{+}\NormalTok{ d}
+\NormalTok{                    M\_cb }\OperatorTok{=}\NormalTok{ M[c, b]}
+\NormalTok{                    M\_ab }\OperatorTok{=}\NormalTok{ M[a, b]}
+\NormalTok{                    M\_cd }\OperatorTok{=}\NormalTok{ M[c, d]}
+\NormalTok{                    M\_ad }\OperatorTok{=}\NormalTok{ M[a, d]}
+\NormalTok{                    product }\OperatorTok{=} \BuiltInTok{max}\NormalTok{(M\_ab }\OperatorTok{*}\NormalTok{ M\_cd, }\DecValTok{0}\NormalTok{)}
+\NormalTok{                    tilde\_M[idx1, idx2] }\OperatorTok{=}\NormalTok{ M\_cb }\OperatorTok{*}\NormalTok{ np.sqrt(product) }\OperatorTok{*}\NormalTok{ M\_ad}
+
+    \ControlFlowTok{return}\NormalTok{ tilde\_M}
+\KeywordTok{def}\NormalTok{ sidorenko\_eigenvalue\_check(M):}
+\NormalTok{    M }\OperatorTok{=}\NormalTok{ np.maximum(M, }\DecValTok{0}\NormalTok{)}
+\NormalTok{    M }\OperatorTok{=}\NormalTok{ np.nan\_to\_num(M, nan}\OperatorTok{=}\FloatTok{0.0}\NormalTok{, posinf}\OperatorTok{=}\FloatTok{1.0}\NormalTok{, neginf}\OperatorTok{=}\FloatTok{0.0}\NormalTok{)}
+
+\NormalTok{    tilde\_M }\OperatorTok{=}\NormalTok{ build\_tilde\_M(M)}
+
+    \ControlFlowTok{if} \KeywordTok{not}\NormalTok{ np.}\BuiltInTok{all}\NormalTok{(np.isfinite(tilde\_M)):}
+        \ControlFlowTok{raise} \PreprocessorTok{ValueError}\NormalTok{(}\StringTok{"tilde\_M contains non{-}finite values!"}\NormalTok{)}
+
+    \ControlFlowTok{if} \KeywordTok{not}\NormalTok{ np.allclose(tilde\_M, tilde\_M.T, atol}\OperatorTok{=}\FloatTok{1e{-}10}\NormalTok{):}
+        \BuiltInTok{print}\NormalTok{(}\StringTok{"Warning: tilde\_M is not symmetric"}\NormalTok{)}
+
+\NormalTok{    eigenvalues }\OperatorTok{=}\NormalTok{ np.linalg.eigvalsh(tilde\_M)}
+\NormalTok{    lhs }\OperatorTok{=}\NormalTok{ np.}\BuiltInTok{sum}\NormalTok{(eigenvalues}\OperatorTok{**}\DecValTok{5}\NormalTok{)}
+\NormalTok{    rhs }\OperatorTok{=}\NormalTok{ (np.}\BuiltInTok{sum}\NormalTok{(M))}\OperatorTok{**}\DecValTok{15} \OperatorTok{/}\NormalTok{ (M.size)}\OperatorTok{**}\DecValTok{10}
+    \ControlFlowTok{return}\NormalTok{ np.log(rhs }\OperatorTok{/}\NormalTok{ lhs)}
+
+\KeywordTok{def}\NormalTok{ compute\_t\_G\_W(H, W\_block):}
+    \CommentTok{\# Compute t for nxn graphon, brute force n\^{}|V(H)| calculations}
+\NormalTok{    n }\OperatorTok{=}\NormalTok{ H.shape[}\DecValTok{0}\NormalTok{]}
+\NormalTok{    edges }\OperatorTok{=}\NormalTok{ [(i, j) }\ControlFlowTok{for}\NormalTok{ i }\KeywordTok{in} \BuiltInTok{range}\NormalTok{(n) }\ControlFlowTok{for}\NormalTok{ j }\KeywordTok{in} \BuiltInTok{range}\NormalTok{(i }\OperatorTok{+} \DecValTok{1}\NormalTok{, n) }\ControlFlowTok{if}\NormalTok{ H[i, j] }\OperatorTok{==} \DecValTok{1} \KeywordTok{or}\NormalTok{ H[j, i] }\OperatorTok{==} \DecValTok{1}\NormalTok{]}
+\NormalTok{    num\_blocks }\OperatorTok{=}\NormalTok{ W\_block.shape[}\DecValTok{0}\NormalTok{]}
+\NormalTok{    block\_volume }\OperatorTok{=} \FloatTok{1.0} \OperatorTok{/}\NormalTok{ num\_blocks}
+\NormalTok{    t }\OperatorTok{=} \FloatTok{0.0}
+    \ControlFlowTok{for}\NormalTok{ assignment }\KeywordTok{in}\NormalTok{ product(}\BuiltInTok{range}\NormalTok{(num\_blocks), repeat}\OperatorTok{=}\NormalTok{n):}
+\NormalTok{        prob }\OperatorTok{=} \FloatTok{1.0}
+        \ControlFlowTok{for}\NormalTok{ (u, v) }\KeywordTok{in}\NormalTok{ edges:}
+\NormalTok{            prob }\OperatorTok{*=}\NormalTok{ W\_block[assignment[u], assignment[v]]}
+\NormalTok{        t }\OperatorTok{+=}\NormalTok{ prob }\OperatorTok{*}\NormalTok{ (block\_volume }\OperatorTok{**}\NormalTok{ n)}
+    \ControlFlowTok{return}\NormalTok{ t}
+
+\KeywordTok{def}\NormalTok{ stretch(W, p):}
+    \CommentTok{"""}
+\CommentTok{    Given a 4x4 matrix W, return a new matrix where each entry is stretched further from the mean with p as the multiple}
+\CommentTok{    """}
+\NormalTok{    W\_stretched }\OperatorTok{=}\NormalTok{ W }\OperatorTok{+}\NormalTok{ (p }\OperatorTok{{-}} \DecValTok{1}\NormalTok{) }\OperatorTok{*}\NormalTok{ (W }\OperatorTok{{-}}\NormalTok{ np.mean(W))}
+    \ControlFlowTok{return}\NormalTok{ W\_stretched}
+
+\KeywordTok{def}\NormalTok{ sidorenko\_ratio(H, W\_block):}
+    \CommentTok{\# Computes p\^{}|E(H)| / t {-} 1}
+\NormalTok{    t }\OperatorTok{=}\NormalTok{ compute\_t\_G\_W(H, W\_block)}
+\NormalTok{    p }\OperatorTok{=}\NormalTok{ np.mean(W\_block)}
+\NormalTok{    num\_edges }\OperatorTok{=} \BuiltInTok{int}\NormalTok{(np.}\BuiltInTok{sum}\NormalTok{(H) }\OperatorTok{//} \DecValTok{2}\NormalTok{)}
+    \ControlFlowTok{return}\NormalTok{ np.log(p }\OperatorTok{**}\NormalTok{ num\_edges }\OperatorTok{/}\NormalTok{ t)}
+\end{Highlighting}
+\end{Shaded}
+
+\subsection{Search Parameters and
+Logic}\label{search-parameters-and-logic}
+
+Here is some notes on my modification of Iurii's AMCS code:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  Run the script with \texttt{python\ amcs\_for\_graphon\_demo.py} ,
+  main inputs and parameters to adjust are \texttt{H} ,
+  \texttt{W\_initial} , \texttt{max\_depth}, \texttt{max\_level},
+  \texttt{max\_steps}, \texttt{cur\_ep}, \texttt{min\_length} .
+\item
+  Each perturbation step is a random 4*4 matrix with length (L2 norm)
+  \texttt{cur\_ep}. After an improving step is found, the next step
+  begins from using 100\%, then 90\%\ldots{} of the last successful step
+  mixed with a random step for the first 10 tries. From the current best
+  W, the algorithm makes \texttt{level} * \texttt{ep} random steps to
+  search for an improvement, then \texttt{depth} + 1. When
+  \texttt{depth} reaches \texttt{max\_depth} , it resets to 0 and lets
+  \texttt{level} + 1. When an improvement is found, \texttt{depth} is
+  reset to 0 without increasing \texttt{level}. When \texttt{level}
+  reaches \texttt{max\_level}, \texttt{ep} becomes 80\% of its original
+  value (or 60\% if there has been no improvement in the last cycle)
+  since the current step may be too large.
+\item
+  Currently the weights stabilize after around 10-15 minutes, while the
+  loop reaches an ending criteria after around an hour. It exits the
+  loop when \(\left \lVert W - 1 \right \rVert_\infty < \frac{1}{4m}\)
+  or 3 full loops are run without any improvement. When the first
+  condition is met, usually a Sidorenko ratio around \(1.5*10^{-8}\) to
+  \(3* 10^{-8}\) is reached.
+
+  This is much smaller than that of a random matrix of similar distance
+  to the uniform weight matrix (around order of \(10^{-4}\)), but it's
+  yet to be determined if there is some special structure to be found
+  for these optimized matrices and if it holds clues for patterns close
+  to violation.
+\end{enumerate}
+
+Potential next steps: H could be changed to test other graphs with 12 or
+less nodes that haven't been verified, or W could be changed to a 5*5
+graphon (should converge in a few hours with the current framework).
+
+This framework can be extended to optimize for EFX and the Second
+Neighborhood Conjecture by tweaking the score function and perturbation
+logic.
+
+Optimization results from final version of AMCS:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{H }\OperatorTok{=}\NormalTok{ np.array([}
+\NormalTok{    [}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{],  }
+\NormalTok{    [}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{1}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{],  }
+\NormalTok{    [}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{1}\NormalTok{],  }
+\NormalTok{    [}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{],  }
+\NormalTok{    [}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{,}\DecValTok{0}\NormalTok{],  }
+\NormalTok{    [}\DecValTok{0}\NormalTok{,}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{],  }
+\NormalTok{    [}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{],  }
+\NormalTok{    [}\DecValTok{1}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{],  }
+\NormalTok{    [}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{1}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{],  }
+\NormalTok{    [}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{]}
+\NormalTok{])}
+\NormalTok{W }\OperatorTok{=}\NormalTok{ np.array([}
+\NormalTok{  [}\FloatTok{1.006698144463033850e+00}\NormalTok{,}\FloatTok{9.828284542082723618e{-}01}\NormalTok{,}\FloatTok{1.006953717554858629e+00}\NormalTok{,}\FloatTok{1.003520601558819392e+00}\NormalTok{],}
+\NormalTok{[}\FloatTok{9.828284542082723618e{-}01}\NormalTok{,}\FloatTok{1.007337069931104390e+00}\NormalTok{,}\FloatTok{1.011365901909568432e+00}\NormalTok{,}\FloatTok{9.984762602095663686e{-}01}\NormalTok{],}
+\NormalTok{[}\FloatTok{1.006953717554858629e+00}\NormalTok{,}\FloatTok{1.011365901909568432e+00}\NormalTok{,}\FloatTok{9.842679968971830284e{-}01}\NormalTok{,}\FloatTok{9.974048044071606167e{-}01}\NormalTok{],}
+\NormalTok{[}\FloatTok{1.003520601558819392e+00}\NormalTok{,}\FloatTok{9.984762602095663686e{-}01}\NormalTok{,}\FloatTok{9.974048044071606167e{-}01}\NormalTok{,}\FloatTok{1.000597309012188241e+00}\NormalTok{]}
+\NormalTok{])}
+\NormalTok{np.}\BuiltInTok{round}\NormalTok{(W, }\DecValTok{4}\NormalTok{)}
+\BuiltInTok{print}\NormalTok{(sidorenko\_ratio(H, W))}
+\BuiltInTok{print}\NormalTok{(}\StringTok{"}\CharTok{\textbackslash{}n}\StringTok{Row sums:"}\NormalTok{, np.}\BuiltInTok{round}\NormalTok{(W.}\BuiltInTok{sum}\NormalTok{(axis}\OperatorTok{=}\DecValTok{1}\NormalTok{), }\DecValTok{8}\NormalTok{))}
+\BuiltInTok{print}\NormalTok{(}\StringTok{"Col sums:"}\NormalTok{, np.}\BuiltInTok{round}\NormalTok{(W.}\BuiltInTok{sum}\NormalTok{(axis}\OperatorTok{=}\DecValTok{0}\NormalTok{), }\DecValTok{8}\NormalTok{))}
+\CommentTok{\#W\_initial = np.array([[0.1, 1.1, 1.3, 1.2],}
+\CommentTok{\#[1.1, 1.3, 0.4, 1.1],}
+\CommentTok{\#[1.3, 0.4, 0.9, 1.2],}
+\CommentTok{\#[1.2, 1.1, 1.2, 0.2]])}
+\CommentTok{\#Search complete. Best Sidorenko ratio: {-}1.7497e{-}08}
+\CommentTok{\#Total elapsed time: 3097.35 seconds}
+\CommentTok{\#AMCS\_graphon(H, best\_W, max\_depth= 5, max\_level= 8, max\_steps = 8, epsilon = 0.3)}
+\CommentTok{\#min length = 0.0005}
+
+\NormalTok{W }\OperatorTok{=}\NormalTok{ np.array([}
+\NormalTok{  [}\FloatTok{9.870859047315494461e{-}01}\NormalTok{,}\FloatTok{1.012793678182828838e+00}\NormalTok{,}\FloatTok{9.894975254113421714e{-}01}\NormalTok{,}\FloatTok{1.010617752083826870e+00}\NormalTok{],}
+\NormalTok{[}\FloatTok{1.012793678182828838e+00}\NormalTok{,}\FloatTok{1.010332578863655684e+00}\NormalTok{,}\FloatTok{9.933433720332041084e{-}01}\NormalTok{,}\FloatTok{9.835060697754934855e{-}01}\NormalTok{],}
+\NormalTok{[}\FloatTok{9.894975254113421714e{-}01}\NormalTok{,}\FloatTok{9.933433720332041084e{-}01}\NormalTok{,}\FloatTok{1.016731641432941036e+00}\NormalTok{,}\FloatTok{1.000429702032327395e+00}\NormalTok{],}
+\NormalTok{[}\FloatTok{1.010617752083826870e+00}\NormalTok{,}\FloatTok{9.835060697754934855e{-}01}\NormalTok{,}\FloatTok{1.000429702032327395e+00}\NormalTok{,}\FloatTok{1.005473675933807876e+00}\NormalTok{]}
+\NormalTok{])}
+\NormalTok{np.}\BuiltInTok{round}\NormalTok{(W, }\DecValTok{4}\NormalTok{)}
+\BuiltInTok{print}\NormalTok{(sidorenko\_ratio(H, W))}
+\BuiltInTok{print}\NormalTok{(}\StringTok{"}\CharTok{\textbackslash{}n}\StringTok{Row sums:"}\NormalTok{, np.}\BuiltInTok{round}\NormalTok{(W.}\BuiltInTok{sum}\NormalTok{(axis}\OperatorTok{=}\DecValTok{1}\NormalTok{), }\DecValTok{8}\NormalTok{))}
+\BuiltInTok{print}\NormalTok{(}\StringTok{"Col sums:"}\NormalTok{, np.}\BuiltInTok{round}\NormalTok{(W.}\BuiltInTok{sum}\NormalTok{(axis}\OperatorTok{=}\DecValTok{0}\NormalTok{), }\DecValTok{8}\NormalTok{))}
+\CommentTok{\#W\_initial = np.array([[0.1, 1.1, 1.3, 0.8],}
+\CommentTok{\#[1.1, 0.5, 0.4, 1.1],}
+\CommentTok{\#[1.3, 0.4, 0.9, 1.2],}
+\CommentTok{\#[0.8, 1.1, 1.2, 1.4]])}
+\CommentTok{\#Search complete. Best Sidorenko ratio: {-}2.9797e{-}08}
+\CommentTok{\#Total elapsed time: 3336.68 seconds}
+\CommentTok{\#AMCS\_graphon(H, best\_W, max\_depth= 5, max\_level= 8, max\_steps = 8, epsilon = 0.3)}
+\CommentTok{\#min\_length = 0.0005}
+
+\NormalTok{W }\OperatorTok{=}\NormalTok{ np.array([}
+\NormalTok{  [}\FloatTok{1.005918364232344153e+00}\NormalTok{,}\FloatTok{1.008561605423080598e+00}\NormalTok{,}\FloatTok{1.001622593800778116e+00}\NormalTok{,}\FloatTok{9.838745226963234725e{-}01}\NormalTok{],}
+\NormalTok{[}\FloatTok{1.008561605423080598e+00}\NormalTok{,}\FloatTok{9.956187641638900576e{-}01}\NormalTok{,}\FloatTok{9.862188039403909645e{-}01}\NormalTok{,}\FloatTok{1.009638083189973834e+00}\NormalTok{],}
+\NormalTok{[}\FloatTok{1.001622593800778116e+00}\NormalTok{,}\FloatTok{9.862188039403909645e{-}01}\NormalTok{,}\FloatTok{1.011966560148175764e+00}\NormalTok{,}\FloatTok{1.000195910494968476e+00}\NormalTok{],}
+\NormalTok{[}\FloatTok{9.838745226963234725e{-}01}\NormalTok{,}\FloatTok{1.009638083189973834e+00}\NormalTok{,}\FloatTok{1.000195910494968476e+00}\NormalTok{,}\FloatTok{1.006273272364560212e+00}\NormalTok{]}
+\NormalTok{])}
+\NormalTok{np.}\BuiltInTok{round}\NormalTok{(W, }\DecValTok{4}\NormalTok{)}
+\BuiltInTok{print}\NormalTok{(sidorenko\_ratio(H, W))}
+\BuiltInTok{print}\NormalTok{(}\StringTok{"}\CharTok{\textbackslash{}n}\StringTok{Row sums:"}\NormalTok{, np.}\BuiltInTok{round}\NormalTok{(W.}\BuiltInTok{sum}\NormalTok{(axis}\OperatorTok{=}\DecValTok{1}\NormalTok{), }\DecValTok{8}\NormalTok{))}
+\BuiltInTok{print}\NormalTok{(}\StringTok{"Col sums:"}\NormalTok{, np.}\BuiltInTok{round}\NormalTok{(W.}\BuiltInTok{sum}\NormalTok{(axis}\OperatorTok{=}\DecValTok{0}\NormalTok{), }\DecValTok{8}\NormalTok{))}
+\CommentTok{\#W\_initial = np.array([[0.1, 1.1, 1.3, 1.2],}
+\CommentTok{\#    [1.1, 1.3, 0.4, 1.1],}
+\CommentTok{\#    [1.3, 0.4, 0.9, 1.2],}
+\CommentTok{\#    [1.2, 1.1, 1.2, 0.2]])}
+\CommentTok{\#Early stopping: max|W {-} 1| \textless{} 0.0167}
+\CommentTok{\#Search complete. Best Sidorenko ratio: {-}1.5431e{-}08}
+\CommentTok{\#Total elapsed time: 4420.93 seconds}
+\CommentTok{\#AMCS\_graphon(H, best\_W, max\_depth= 10, max\_level= 6, max\_steps = 8, epsilon = 0.3)}
+\CommentTok{\#min\_length = 0.0004}
+
+\NormalTok{W }\OperatorTok{=}\NormalTok{ np.array([}
+\NormalTok{  [}\FloatTok{9.937669153101358344e{-}01}\NormalTok{,}\FloatTok{1.016135336240906240e+00}\NormalTok{,}\FloatTok{9.884566213567120840e{-}01}\NormalTok{,}\FloatTok{1.001630615749603770e+00}\NormalTok{],}
+\NormalTok{[}\FloatTok{1.016135336240906240e+00}\NormalTok{,}\FloatTok{9.910134625158074639e{-}01}\NormalTok{,}\FloatTok{9.912700210631636422e{-}01}\NormalTok{,}\FloatTok{1.001558727266020687e+00}\NormalTok{],}
+\NormalTok{[}\FloatTok{9.884566213567120840e{-}01}\NormalTok{,}\FloatTok{9.912700210631636422e{-}01}\NormalTok{,}\FloatTok{1.007400418292873745e+00}\NormalTok{,}\FloatTok{1.012914183393865297e+00}\NormalTok{],}
+\NormalTok{[}\FloatTok{1.001630615749603770e+00}\NormalTok{,}\FloatTok{1.001558727266020687e+00}\NormalTok{,}\FloatTok{1.012914183393865297e+00}\NormalTok{,}\FloatTok{9.838881937406414036e{-}01}\NormalTok{]}
+\NormalTok{])}
+\NormalTok{np.}\BuiltInTok{round}\NormalTok{(W, }\DecValTok{4}\NormalTok{)}
+\BuiltInTok{print}\NormalTok{(sidorenko\_ratio(H, W))}
+\BuiltInTok{print}\NormalTok{(}\StringTok{"}\CharTok{\textbackslash{}n}\StringTok{Row sums:"}\NormalTok{, np.}\BuiltInTok{round}\NormalTok{(W.}\BuiltInTok{sum}\NormalTok{(axis}\OperatorTok{=}\DecValTok{1}\NormalTok{), }\DecValTok{8}\NormalTok{))}
+\BuiltInTok{print}\NormalTok{(}\StringTok{"Col sums:"}\NormalTok{, np.}\BuiltInTok{round}\NormalTok{(W.}\BuiltInTok{sum}\NormalTok{(axis}\OperatorTok{=}\DecValTok{0}\NormalTok{), }\DecValTok{8}\NormalTok{))}
+\CommentTok{\#W\_initial = np.array([}
+    \CommentTok{\#[0.9, 1.1, 1.3, 0.8],}
+    \CommentTok{\#[1.1, 0.5, 0.4, 1.4],}
+    \CommentTok{\#[1.3, 0.4, 0.9, 0.3],}
+    \CommentTok{\#[0.8, 1.4, 0.3, 1.4]])}
+\CommentTok{\#Early stopping: max|W {-} 1| \textless{} 0.0167}
+\CommentTok{\#Search complete. Best Sidorenko ratio: {-}2.0361e{-}08}
+\CommentTok{\# AMCS\_graphon(H, best\_W, max\_depth= 10, max\_level= 6, max\_steps = 10, epsilon = 0.3)}
+\CommentTok{\#min\_length = 0.0004}
+\CommentTok{\#Total elapsed time: 3795.58 seconds}
+
+\NormalTok{W }\OperatorTok{=}\NormalTok{ np.array([}
+\NormalTok{  [}\FloatTok{1.003815032309734567e+00}\NormalTok{,}\FloatTok{1.002321130250688919e+00}\NormalTok{,}\FloatTok{9.802993524557340743e{-}01}\NormalTok{,}\FloatTok{1.013558287856340057e+00}\NormalTok{],}
+\NormalTok{[}\FloatTok{1.002321130250688919e+00}\NormalTok{,}\FloatTok{9.858945971800775476e{-}01}\NormalTok{,}\FloatTok{1.009930703536328744e+00}\NormalTok{,}\FloatTok{1.001860064505293524e+00}\NormalTok{],}
+\NormalTok{[}\FloatTok{9.802993524557340743e{-}01}\NormalTok{,}\FloatTok{1.009930703536328744e+00}\NormalTok{,}\FloatTok{1.008668286555383764e+00}\NormalTok{,}\FloatTok{1.001089088428382290e+00}\NormalTok{],}
+\NormalTok{[}\FloatTok{1.013558287856340057e+00}\NormalTok{,}\FloatTok{1.001860064505293524e+00}\NormalTok{,}\FloatTok{1.001089088428382290e+00}\NormalTok{,}\FloatTok{9.835048298892703489e{-}01}\NormalTok{]}
+\NormalTok{])}
+\NormalTok{np.}\BuiltInTok{round}\NormalTok{(W, }\DecValTok{4}\NormalTok{)}
+\BuiltInTok{print}\NormalTok{(sidorenko\_ratio(H, W))}
+\BuiltInTok{print}\NormalTok{(}\StringTok{"}\CharTok{\textbackslash{}n}\StringTok{Row sums:"}\NormalTok{, np.}\BuiltInTok{round}\NormalTok{(W.}\BuiltInTok{sum}\NormalTok{(axis}\OperatorTok{=}\DecValTok{1}\NormalTok{), }\DecValTok{8}\NormalTok{))}
+\BuiltInTok{print}\NormalTok{(}\StringTok{"Col sums:"}\NormalTok{, np.}\BuiltInTok{round}\NormalTok{(W.}\BuiltInTok{sum}\NormalTok{(axis}\OperatorTok{=}\DecValTok{0}\NormalTok{), }\DecValTok{8}\NormalTok{))}
+\CommentTok{\#W\_initial = np.array([[0.1, 1.1, 1.3, 1.2],}
+   \CommentTok{\# [1.1, 1.3, 0.4, 1.1],}
+   \CommentTok{\# [1.3, 0.4, 0.9, 1.2],}
+   \CommentTok{\# [1.2, 1.1, 1.2, 0.2]])}
+\CommentTok{\#Search complete. Best Sidorenko ratio: {-}2.6723e{-}08}
+\CommentTok{\# AMCS\_graphon(H, best\_W, max\_depth= 6, max\_level= 6, max\_steps = 15, epsilon = 0.3)}
+\CommentTok{\#min\_length = 0.0004}
+\CommentTok{\#Total elapsed time: 3778.65 seconds}
+
+\NormalTok{W }\OperatorTok{=}\NormalTok{ np.array([}
+\NormalTok{  [}\FloatTok{1.002100188789957658e+00}\NormalTok{,}\FloatTok{1.013100042952112645e+00}\NormalTok{,}\FloatTok{9.839749790429854759e{-}01}\NormalTok{,}\FloatTok{1.000841600065852210e+00}\NormalTok{],}
+\NormalTok{[}\FloatTok{1.013100042952112645e+00}\NormalTok{,}\FloatTok{9.962253851697436824e{-}01}\NormalTok{,}\FloatTok{1.005479119659793641e+00}\NormalTok{,}\FloatTok{9.851842122305812799e{-}01}\NormalTok{],}
+\NormalTok{[}\FloatTok{9.839749790429854759e{-}01}\NormalTok{,}\FloatTok{1.005479119659793641e+00}\NormalTok{,}\FloatTok{1.013067090262603109e+00}\NormalTok{,}\FloatTok{9.974714161286379888e{-}01}\NormalTok{],}
+\NormalTok{[}\FloatTok{1.000841600065852210e+00}\NormalTok{,}\FloatTok{9.851842122305812799e{-}01}\NormalTok{,}\FloatTok{9.974714161286379888e{-}01}\NormalTok{,}\FloatTok{1.016504595617770290e+00}\NormalTok{]}
+\NormalTok{])}
+\NormalTok{np.}\BuiltInTok{round}\NormalTok{(W, }\DecValTok{4}\NormalTok{)}
+\BuiltInTok{print}\NormalTok{(sidorenko\_ratio(H, W))}
+\BuiltInTok{print}\NormalTok{(}\StringTok{"}\CharTok{\textbackslash{}n}\StringTok{Row sums:"}\NormalTok{, np.}\BuiltInTok{round}\NormalTok{(W.}\BuiltInTok{sum}\NormalTok{(axis}\OperatorTok{=}\DecValTok{1}\NormalTok{), }\DecValTok{8}\NormalTok{))}
+\BuiltInTok{print}\NormalTok{(}\StringTok{"Col sums:"}\NormalTok{, np.}\BuiltInTok{round}\NormalTok{(W.}\BuiltInTok{sum}\NormalTok{(axis}\OperatorTok{=}\DecValTok{0}\NormalTok{), }\DecValTok{8}\NormalTok{))}
+\CommentTok{\#W\_initial = np.array([}
+    \CommentTok{\#[0.9, 1.1, 1.3, 0.8],}
+    \CommentTok{\#[1.1, 0.5, 0.4, 1.4],}
+    \CommentTok{\#[1.3, 0.4, 0.9, 0.3],}
+    \CommentTok{\#[0.8, 1.4, 0.3, 1.4]])}
+\CommentTok{\#Early stopping: max|W {-} 1| \textless{} 0.0167}
+
+\CommentTok{\#Search complete. Best Sidorenko ratio: {-}2.2294e{-}08}
+\CommentTok{\#AMCS\_graphon(H, best\_W, max\_depth= 8, max\_level= 10, max\_steps = 5, epsilon = 0.3)}
+\CommentTok{\# min\_length = 0.0004}
+\CommentTok{\#Total elapsed time: 4691.44 seconds}
+
+\NormalTok{W }\OperatorTok{=}\NormalTok{ np.array([}
+\NormalTok{  [}\FloatTok{9.981881920952020426e{-}01}\NormalTok{,}\FloatTok{9.960787975368707858e{-}01}\NormalTok{,}\FloatTok{9.916104719947598234e{-}01}\NormalTok{,}\FloatTok{1.014137493442902382e+00}\NormalTok{],}
+\NormalTok{[}\FloatTok{9.960787975368707858e{-}01}\NormalTok{,}\FloatTok{9.933978260588319786e{-}01}\NormalTok{,}\FloatTok{1.001361925434438804e+00}\NormalTok{,}\FloatTok{1.009160644897071579e+00}\NormalTok{],}
+\NormalTok{[}\FloatTok{9.916104719947598234e{-}01}\NormalTok{,}\FloatTok{1.001361925434438804e+00}\NormalTok{,}\FloatTok{1.016594404767061866e+00}\NormalTok{,}\FloatTok{9.904346735719898875e{-}01}\NormalTok{],}
+\NormalTok{[}\FloatTok{1.014137493442902382e+00}\NormalTok{,}\FloatTok{1.009160644897071579e+00}\NormalTok{,}\FloatTok{9.904346735719898875e{-}01}\NormalTok{,}\FloatTok{9.862515633228388090e{-}01}\NormalTok{]}
+\NormalTok{])}
+\NormalTok{sidorenko\_ratio(H, W)}
+\BuiltInTok{print}\NormalTok{(}\StringTok{"}\CharTok{\textbackslash{}n}\StringTok{Row sums:"}\NormalTok{, np.}\BuiltInTok{round}\NormalTok{(W.}\BuiltInTok{sum}\NormalTok{(axis}\OperatorTok{=}\DecValTok{1}\NormalTok{), }\DecValTok{8}\NormalTok{))}
+\BuiltInTok{print}\NormalTok{(}\StringTok{"Col sums:"}\NormalTok{, np.}\BuiltInTok{round}\NormalTok{(W.}\BuiltInTok{sum}\NormalTok{(axis}\OperatorTok{=}\DecValTok{0}\NormalTok{), }\DecValTok{8}\NormalTok{))}
+\CommentTok{\#W\_initial = np.array([[0.8, 1.1, 1.3, 1.2],}
+   \CommentTok{\# [1.1, 1.3, 0.4, 1.1],}
+  \CommentTok{\#  [1.3, 0.4, 0.4, 1.2],}
+  \CommentTok{\#  [1.2, 1.1, 1.2, 0.2]])}
+\CommentTok{\#Early stopping: max|W {-} 1| \textless{} 0.0167}
+\CommentTok{\#AMCS\_graphon(H, best\_W, max\_depth= 12, max\_level= 8, max\_steps = 5, epsilon = cur\_ep)}
+\CommentTok{\#Search complete. Best Sidorenko ratio: {-}2.0376e{-}08}
+\CommentTok{\#Total elapsed time: 2876.20 seconds}
+\NormalTok{W }\OperatorTok{=}\NormalTok{ np.array([}
+\NormalTok{  [}\FloatTok{1.016419620457121642e+00}\NormalTok{,}\FloatTok{9.954765866793205964e{-}01}\NormalTok{,}\FloatTok{9.924696619845138068e{-}01}\NormalTok{,}\FloatTok{9.956573914270188119e{-}01}\NormalTok{],}
+\NormalTok{[}\FloatTok{9.954765866793205964e{-}01}\NormalTok{,}\FloatTok{9.933100787557884725e{-}01}\NormalTok{,}\FloatTok{1.016065556720054497e+00}\NormalTok{,}\FloatTok{9.951186923973119880e{-}01}\NormalTok{],}
+\NormalTok{[}\FloatTok{9.924696619845138068e{-}01}\NormalTok{,}\FloatTok{1.016065556720054497e+00}\NormalTok{,}\FloatTok{9.972592334223361332e{-}01}\NormalTok{,}\FloatTok{9.942118906824225499e{-}01}\NormalTok{],}
+\NormalTok{[}\FloatTok{9.956573914270188119e{-}01}\NormalTok{,}\FloatTok{9.951186923973119880e{-}01}\NormalTok{,}\FloatTok{9.942118906824225499e{-}01}\NormalTok{,}\FloatTok{1.015011507583468475e+00}\NormalTok{]}
+\NormalTok{])}
+\NormalTok{np.}\BuiltInTok{round}\NormalTok{(W, }\DecValTok{4}\NormalTok{)}
+\NormalTok{sidorenko\_ratio(H, W)}
+\BuiltInTok{print}\NormalTok{(}\StringTok{"}\CharTok{\textbackslash{}n}\StringTok{Row sums:"}\NormalTok{, np.}\BuiltInTok{round}\NormalTok{(W.}\BuiltInTok{sum}\NormalTok{(axis}\OperatorTok{=}\DecValTok{1}\NormalTok{), }\DecValTok{8}\NormalTok{))}
+\BuiltInTok{print}\NormalTok{(}\StringTok{"Col sums:"}\NormalTok{, np.}\BuiltInTok{round}\NormalTok{(W.}\BuiltInTok{sum}\NormalTok{(axis}\OperatorTok{=}\DecValTok{0}\NormalTok{), }\DecValTok{8}\NormalTok{))}
+\CommentTok{\#Early stopping: max|W {-} 1| \textless{} 0.0167}
+
+\CommentTok{\#Search complete. Best Sidorenko ratio: {-}1.3123e{-}08}
+\CommentTok{\#AMCS\_graphon(H, best\_W, max\_depth= 6, max\_level= 8, max\_steps = 10, epsilon = 0.3)}
+\CommentTok{\#Total elapsed time: 5806.97 seconds}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+-1.749725324393597e-08
+
+Row sums: [4.00000092 4.00000769 3.99999242 3.99999898]
+Col sums: [4.00000092 4.00000769 3.99999242 3.99999898]
+-2.9797800227136645e-08
+
+Row sums: [3.99999486 3.9999757  4.00000224 4.0000272 ]
+Col sums: [3.99999486 3.9999757  4.00000224 4.0000272 ]
+-1.5431189334381074e-08
+
+Row sums: [3.99997709 4.00003726 4.00000387 3.99998179]
+Col sums: [3.99997709 4.00003726 4.00000387 3.99998179]
+-2.0361656124199164e-08
+
+Row sums: [3.99998949 3.99997755 4.00004124 3.99999172]
+Col sums: [3.99998949 3.99997755 4.00004124 3.99999172]
+-2.672246859525017e-08
+
+Row sums: [3.9999938  4.0000065  3.99998743 4.00001227]
+Col sums: [3.9999938  4.0000065  3.99998743 4.00001227]
+-2.2294513595088403e-08
+
+Row sums: [4.00001681 3.99998876 3.99999261 4.00000182]
+Col sums: [4.00001681 3.99998876 3.99999261 4.00000182]
+
+Row sums: [4.00001496 3.99999919 4.00000148 3.99998438]
+Col sums: [4.00001496 3.99999919 4.00000148 3.99998438]
+
+Row sums: [4.00002326 3.99997091 4.00000634 3.99999948]
+Col sums: [4.00002326 3.99997091 4.00000634 3.99999948]
+\end{verbatim}
+
+Optimization results from previous versions of AMCS, stretched/ shrunk
+to the same scale to compare their ratios
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{W }\OperatorTok{=}\NormalTok{ np.array([}
+\NormalTok{  [}\FloatTok{9.829822690147628217e{-}01}\NormalTok{,}\FloatTok{1.006239824946722372e+00}\NormalTok{,}\FloatTok{9.892987303600105919e{-}01}\NormalTok{,}\FloatTok{1.021524806997454071e+00}\NormalTok{],}
+\NormalTok{[}\FloatTok{1.006239824946722372e+00}\NormalTok{,}\FloatTok{9.759788132675752959e{-}01}\NormalTok{,}\FloatTok{1.014080386099867059e+00}\NormalTok{,}\FloatTok{1.003746041432600267e+00}\NormalTok{],}
+\NormalTok{[}\FloatTok{9.892987303600105919e{-}01}\NormalTok{,}\FloatTok{1.014080386099867059e+00}\NormalTok{,}\FloatTok{1.018932138361181794e+00}\NormalTok{,}\FloatTok{9.777298907830966890e{-}01}\NormalTok{],}
+\NormalTok{[}\FloatTok{1.021524806997454071e+00}\NormalTok{,}\FloatTok{1.003746041432600267e+00}\NormalTok{,}\FloatTok{9.777298907830966890e{-}01}\NormalTok{,}\FloatTok{9.968674181169788762e{-}01}\NormalTok{]}
+\NormalTok{])}
+\NormalTok{sidorenko\_ratio(H, stretch(W, }\DecValTok{1} \OperatorTok{/}\NormalTok{ (}\DecValTok{60} \OperatorTok{*}\NormalTok{ np.}\BuiltInTok{max}\NormalTok{(}\BuiltInTok{abs}\NormalTok{(W }\OperatorTok{{-}} \DecValTok{1}\NormalTok{)))))}
+
+\NormalTok{W }\OperatorTok{=}\NormalTok{ np.array([}
+\NormalTok{[}\FloatTok{1.008086217686960051e+00}\NormalTok{,}\FloatTok{1.006769525428973910e+00}\NormalTok{,}\FloatTok{9.915366153722398046e{-}01}\NormalTok{,}\FloatTok{9.936051460927676215e{-}01}\NormalTok{],}
+\NormalTok{[}\FloatTok{1.006769525428973910e+00}\NormalTok{,}\FloatTok{9.812253243159484439e{-}01}\NormalTok{,}\FloatTok{1.006088680845625305e+00}\NormalTok{,}\FloatTok{1.005917335263637247e+00}\NormalTok{],}
+\NormalTok{[}\FloatTok{9.915366153722398046e{-}01}\NormalTok{,}\FloatTok{1.006088680845625305e+00}\NormalTok{,}\FloatTok{1.001166744147237608e+00}\NormalTok{,}\FloatTok{1.001212472498347328e+00}\NormalTok{],}
+\NormalTok{[}\FloatTok{9.936051460927676215e{-}01}\NormalTok{,}\FloatTok{1.005917335263637247e+00}\NormalTok{,}\FloatTok{1.001212472498347328e+00}\NormalTok{,}\FloatTok{9.992621628466726857e{-}01}\NormalTok{]}
+\NormalTok{])}
+\NormalTok{sidorenko\_ratio(H, stretch(W, }\DecValTok{1} \OperatorTok{/}\NormalTok{ (}\DecValTok{60} \OperatorTok{*}\NormalTok{ np.}\BuiltInTok{max}\NormalTok{(}\BuiltInTok{abs}\NormalTok{(W }\OperatorTok{{-}} \DecValTok{1}\NormalTok{)))))}
+
+\NormalTok{W }\OperatorTok{=}\NormalTok{ np.array([}
+\NormalTok{ [}\FloatTok{9.602514917187326970e{-}01}\NormalTok{,}\FloatTok{1.015286782632627061e+00}\NormalTok{,}\FloatTok{1.011833006234631238e+00}\NormalTok{,}\FloatTok{1.012574322152577366e+00}\NormalTok{],}
+\NormalTok{[}\FloatTok{1.015286782632627061e+00}\NormalTok{,}\FloatTok{1.003895567311315684e+00}\NormalTok{,}\FloatTok{9.741647409692193449e{-}01}\NormalTok{,}\FloatTok{1.006689663022229508e+00}\NormalTok{],}
+\NormalTok{[}\FloatTok{1.011833006234631238e+00}\NormalTok{,}\FloatTok{9.741647409692193449e{-}01}\NormalTok{,}\FloatTok{1.012872268312449586e+00}\NormalTok{,}\FloatTok{1.001127594711219260e+00}\NormalTok{],}
+\NormalTok{[}\FloatTok{1.012574322152577366e+00}\NormalTok{,}\FloatTok{1.006689663022229508e+00}\NormalTok{,}\FloatTok{1.001127594711219260e+00}\NormalTok{,}\FloatTok{9.796284532124968081e{-}01}\NormalTok{]}
+\NormalTok{])}
+\NormalTok{sidorenko\_ratio(H, stretch(W, }\DecValTok{1} \OperatorTok{/}\NormalTok{ (}\DecValTok{60} \OperatorTok{*}\NormalTok{ np.}\BuiltInTok{max}\NormalTok{(}\BuiltInTok{abs}\NormalTok{(W }\OperatorTok{{-}} \DecValTok{1}\NormalTok{)))))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+np.float64(-6.317677290174337e-09)
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{W }\OperatorTok{=}\NormalTok{ np.array([}
+\NormalTok{  [}\FloatTok{9.746938100681739048e{-}01}\NormalTok{,}\FloatTok{1.011048495783134049e+00}\NormalTok{,}\FloatTok{1.007385985375905069e+00}\NormalTok{,}\FloatTok{1.006898802943898552e+00}\NormalTok{],}
+\NormalTok{[}\FloatTok{1.011048495783134049e+00}\NormalTok{,}\FloatTok{9.778949562160562659e{-}01}\NormalTok{,}\FloatTok{1.004556144263334838e+00}\NormalTok{,}\FloatTok{1.006470554227467895e+00}\NormalTok{],}
+\NormalTok{[}\FloatTok{1.007385985375905069e+00}\NormalTok{,}\FloatTok{1.004556144263334838e+00}\NormalTok{,}\FloatTok{9.796630669374898348e{-}01}\NormalTok{,}\FloatTok{1.008385183820106779e+00}\NormalTok{],}
+\NormalTok{[}\FloatTok{1.006898802943898552e+00}\NormalTok{,}\FloatTok{1.006470554227467895e+00}\NormalTok{,}\FloatTok{1.008385183820106779e+00}\NormalTok{,}\FloatTok{9.782578339505850762e{-}01}\NormalTok{]}
+\NormalTok{])}
+\NormalTok{sidorenko\_ratio(H, stretch(W, }\DecValTok{1} \OperatorTok{/}\NormalTok{ (}\DecValTok{60} \OperatorTok{*}\NormalTok{ np.}\BuiltInTok{max}\NormalTok{(}\BuiltInTok{abs}\NormalTok{(W }\OperatorTok{{-}} \DecValTok{1}\NormalTok{)))))}
+\BuiltInTok{print}\NormalTok{(}\StringTok{"}\CharTok{\textbackslash{}n}\StringTok{Row sums:"}\NormalTok{, np.}\BuiltInTok{round}\NormalTok{(W.}\BuiltInTok{sum}\NormalTok{(axis}\OperatorTok{=}\DecValTok{1}\NormalTok{), }\DecValTok{8}\NormalTok{))}
+\BuiltInTok{print}\NormalTok{(}\StringTok{"Col sums:"}\NormalTok{, np.}\BuiltInTok{round}\NormalTok{(W.}\BuiltInTok{sum}\NormalTok{(axis}\OperatorTok{=}\DecValTok{0}\NormalTok{), }\DecValTok{8}\NormalTok{))}
+
+\NormalTok{W }\OperatorTok{=}\NormalTok{ np.array([}
+\NormalTok{  [}\FloatTok{9.785204923248900233e{-}01}\NormalTok{,}\FloatTok{1.006063664598876972e+00}\NormalTok{,}\FloatTok{1.008272758742907005e+00}\NormalTok{,}\FloatTok{1.007169217624657831e+00}\NormalTok{],}
+\NormalTok{[}\FloatTok{1.006063664598876972e+00}\NormalTok{,}\FloatTok{9.809639196219169799e{-}01}\NormalTok{,}\FloatTok{1.006829849932037835e+00}\NormalTok{,}\FloatTok{1.006152334412331317e+00}\NormalTok{],}
+\NormalTok{[}\FloatTok{1.008272758742907005e+00}\NormalTok{,}\FloatTok{1.006829849932037835e+00}\NormalTok{,}\FloatTok{9.769347070419951429e{-}01}\NormalTok{,}\FloatTok{1.007911030016080955e+00}\NormalTok{],}
+\NormalTok{[}\FloatTok{1.007169217624657831e+00}\NormalTok{,}\FloatTok{1.006152334412331317e+00}\NormalTok{,}\FloatTok{1.007911030016080955e+00}\NormalTok{,}\FloatTok{9.787831703574124687e{-}01}\NormalTok{]}
+\NormalTok{])}
+\NormalTok{sidorenko\_ratio(H, stretch(W, }\DecValTok{1} \OperatorTok{/}\NormalTok{ (}\DecValTok{60} \OperatorTok{*}\NormalTok{ np.}\BuiltInTok{max}\NormalTok{(}\BuiltInTok{abs}\NormalTok{(W }\OperatorTok{{-}} \DecValTok{1}\NormalTok{)))))}
+\BuiltInTok{print}\NormalTok{(}\StringTok{"}\CharTok{\textbackslash{}n}\StringTok{Row sums:"}\NormalTok{, np.}\BuiltInTok{round}\NormalTok{(W.}\BuiltInTok{sum}\NormalTok{(axis}\OperatorTok{=}\DecValTok{1}\NormalTok{), }\DecValTok{8}\NormalTok{))}
+\BuiltInTok{print}\NormalTok{(}\StringTok{"Col sums:"}\NormalTok{, np.}\BuiltInTok{round}\NormalTok{(W.}\BuiltInTok{sum}\NormalTok{(axis}\OperatorTok{=}\DecValTok{0}\NormalTok{), }\DecValTok{8}\NormalTok{))}
+
+\NormalTok{W }\OperatorTok{=}\NormalTok{ np.array([}
+\NormalTok{  [}\FloatTok{1.029190107276600541e+00}\NormalTok{,}\FloatTok{9.915724844106691416e{-}01}\NormalTok{,}\FloatTok{9.892356910190851504e{-}01}\NormalTok{,}\FloatTok{9.900125185850182641e{-}01}\NormalTok{],}
+\NormalTok{[}\FloatTok{9.915724844106691416e{-}01}\NormalTok{,}\FloatTok{1.017155698960063637e+00}\NormalTok{,}\FloatTok{9.930494485333212218e{-}01}\NormalTok{,}\FloatTok{9.982377556065161750e{-}01}\NormalTok{],}
+\NormalTok{[}\FloatTok{9.892356910190851504e{-}01}\NormalTok{,}\FloatTok{9.930494485333212218e{-}01}\NormalTok{,}\FloatTok{1.024217735972285714e+00}\NormalTok{,}\FloatTok{9.934713518665881926e{-}01}\NormalTok{],}
+\NormalTok{[}\FloatTok{9.900125185850182641e{-}01}\NormalTok{,}\FloatTok{9.982377556065161750e{-}01}\NormalTok{,}\FloatTok{9.934713518665881926e{-}01}\NormalTok{,}\FloatTok{1.018277957748653817e+00}\NormalTok{]}
+\NormalTok{])}
+\BuiltInTok{print}\NormalTok{(}\StringTok{"}\CharTok{\textbackslash{}n}\StringTok{Row sums:"}\NormalTok{, np.}\BuiltInTok{round}\NormalTok{(W.}\BuiltInTok{sum}\NormalTok{(axis}\OperatorTok{=}\DecValTok{1}\NormalTok{), }\DecValTok{8}\NormalTok{))}
+\BuiltInTok{print}\NormalTok{(}\StringTok{"Col sums:"}\NormalTok{, np.}\BuiltInTok{round}\NormalTok{(W.}\BuiltInTok{sum}\NormalTok{(axis}\OperatorTok{=}\DecValTok{0}\NormalTok{), }\DecValTok{8}\NormalTok{))}
+\NormalTok{sidorenko\_ratio(H, stretch(W, }\DecValTok{1} \OperatorTok{/}\NormalTok{ (}\DecValTok{60} \OperatorTok{*}\NormalTok{ np.}\BuiltInTok{max}\NormalTok{(}\BuiltInTok{abs}\NormalTok{(W }\OperatorTok{{-}} \DecValTok{1}\NormalTok{)))))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+
+Row sums: [4.00002709 3.99997015 3.99999038 4.00001237]
+Col sums: [4.00002709 3.99997015 3.99999038 4.00001237]
+
+Row sums: [4.00002613 4.00000977 3.99994835 4.00001575]
+Col sums: [4.00002613 4.00000977 3.99994835 4.00001575]
+
+Row sums: [4.0000108  4.00001539 3.99997423 3.99999958]
+Col sums: [4.0000108  4.00001539 3.99997423 3.99999958]
+\end{verbatim}
+
+\begin{verbatim}
+np.float64(-7.100126511953525e-09)
+\end{verbatim}
+
+Local minimizers, other H to try, expand graph H
+
+Robert: EFX code
+
+Kevin: Memory out of bounds, filtering DP out of zero. Fixed the DP
+
+Kate: Second neighborhood
+
+Iurii: Penalty for 100 times for the normal one, second neighborhood 3
+sinks in cycle. Look at what to generate
+
+(Change it to delete edges and add edges somewhere else, look at large
+sparse graph)
+
+\section{Yasir: 3*4 on 6*6, fix entries and don't do it randomly, making
+it fixed graph at the beginning. Keep checking on the random sample
+idea, see when it has positive densities, apply to
+sidorenko}\label{yasir-34-on-66-fix-entries-and-dont-do-it-randomly-making-it-fixed-graph-at-the-beginning.-keep-checking-on-the-random-sample-idea-see-when-it-has-positive-densities-apply-to-sidorenko}
+
+AMCS for matrix version: log(LHS / RHS)
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{W }\OperatorTok{=}\NormalTok{ np.array([}
+\NormalTok{[}\FloatTok{1.011608449121323972e+00}\NormalTok{,}\FloatTok{9.891825304526488116e{-}01}\NormalTok{,}\FloatTok{9.872346394532595104e{-}01}\NormalTok{,}\FloatTok{1.034909907127456785e+00}\NormalTok{,}\FloatTok{1.018469263228698907e+00}\NormalTok{,}\FloatTok{9.747775257968384066e{-}01}\NormalTok{,}\FloatTok{9.838264530439547739e{-}01}\NormalTok{],}
+\NormalTok{[}\FloatTok{1.016161047029785713e+00}\NormalTok{,}\FloatTok{9.602643477079099155e{-}01}\NormalTok{,}\FloatTok{9.864416543991820774e{-}01}\NormalTok{,}\FloatTok{1.000034359509664350e+00}\NormalTok{,}\FloatTok{9.867465259022698554e{-}01}\NormalTok{,}\FloatTok{1.030934922307649382e+00}\NormalTok{,}\FloatTok{1.019420872559029911e+00}\NormalTok{],}
+\NormalTok{[}\FloatTok{9.881003647290227399e{-}01}\NormalTok{,}\FloatTok{1.005366212287308381e+00}\NormalTok{,}\FloatTok{1.008803877644332214e+00}\NormalTok{,}\FloatTok{9.828693775381349695e{-}01}\NormalTok{,}\FloatTok{1.022727126475509563e+00}\NormalTok{,}\FloatTok{1.030312237404100273e+00}\NormalTok{,}\FloatTok{9.617736184414986678e{-}01}\NormalTok{],}
+\NormalTok{[}\FloatTok{9.949467462533173601e{-}01}\NormalTok{,}\FloatTok{9.960072834913044071e{-}01}\NormalTok{,}\FloatTok{1.048311703355971236e+00}\NormalTok{,}\FloatTok{1.011703119814143292e+00}\NormalTok{,}\FloatTok{9.679125487572185493e{-}01}\NormalTok{,}\FloatTok{9.880015427418245011e{-}01}\NormalTok{,}\FloatTok{9.931232883279429435e{-}01}\NormalTok{],}
+\NormalTok{[}\FloatTok{9.505410495090286238e{-}01}\NormalTok{,}\FloatTok{1.016714549917480781e+00}\NormalTok{,}\FloatTok{9.884559035812212624e{-}01}\NormalTok{,}\FloatTok{1.011022212132007159e+00}\NormalTok{,}\FloatTok{1.005835097603216211e+00}\NormalTok{,}\FloatTok{1.000373593078675460e+00}\NormalTok{,}\FloatTok{1.027034745721290943e+00}\NormalTok{],}
+\NormalTok{[}\FloatTok{1.024857305491031489e+00}\NormalTok{,}\FloatTok{1.041553458902944707e+00}\NormalTok{,}\FloatTok{9.744585688848528271e{-}01}\NormalTok{,}\FloatTok{9.917960296709245060e{-}01}\NormalTok{,}\FloatTok{9.696222960239109234e{-}01}\NormalTok{,}\FloatTok{1.002132510703301005e+00}\NormalTok{,}\FloatTok{9.955368024339357191e{-}01}\NormalTok{],}
+\NormalTok{[}\FloatTok{1.013741721215937197e+00}\NormalTok{,}\FloatTok{9.908935352219847559e{-}01}\NormalTok{,}\FloatTok{1.006276958811419764e+00}\NormalTok{,}\FloatTok{9.676144445305865371e{-}01}\NormalTok{,}\FloatTok{1.028701843504513880e+00}\NormalTok{,}\FloatTok{9.735224686152208484e{-}01}\NormalTok{,}\FloatTok{1.019343359545220373e+00}\NormalTok{]}
+\NormalTok{])}
+\NormalTok{np.}\BuiltInTok{round}\NormalTok{(W, }\DecValTok{3}\NormalTok{)}
+\CommentTok{\#Search complete. Best ratio: {-}2.1565e{-}07}
+\CommentTok{\#Total elapsed time: 10954.29 seconds}
+\CommentTok{\#AMCS\_graphon(H, best\_W, max\_depth= 20, max\_level= 10, max\_steps = 10, epsilon = 0.3)}
+\CommentTok{\#min\_length = 0.0001}
+\BuiltInTok{print}\NormalTok{(}\SpecialStringTok{f"log(RHS / LHS) = }\SpecialCharTok{\{}\NormalTok{sidorenko\_eigenvalue\_check(W)}\SpecialCharTok{:.4e\}}\SpecialStringTok{"}\NormalTok{)}
+
+\NormalTok{W }\OperatorTok{=}\NormalTok{ np.array([}
+\NormalTok{[}\FloatTok{1.005210613430479238e+00}\NormalTok{,}\FloatTok{9.785080600008525531e{-}01}\NormalTok{,}\FloatTok{1.030149118534539721e+00}\NormalTok{,}\FloatTok{9.470065778919203314e{-}01}\NormalTok{,}\FloatTok{9.874810917734455629e{-}01}\NormalTok{,}\FloatTok{1.019551560619056163e+00}\NormalTok{,}\FloatTok{1.065469241950302015e+00}\NormalTok{,}\FloatTok{9.665218246105804489e{-}01}\NormalTok{],}
+\NormalTok{[}\FloatTok{9.576296863816700089e{-}01}\NormalTok{,}\FloatTok{1.019208953870945233e+00}\NormalTok{,}\FloatTok{1.045248971905472946e+00}\NormalTok{,}\FloatTok{1.022662155815650120e+00}\NormalTok{,}\FloatTok{9.461606078133160125e{-}01}\NormalTok{,}\FloatTok{1.029002415024977024e+00}\NormalTok{,}\FloatTok{9.825217135572851257e{-}01}\NormalTok{,}\FloatTok{9.976211271243448087e{-}01}\NormalTok{],}
+\NormalTok{[}\FloatTok{9.764775764889866982e{-}01}\NormalTok{,}\FloatTok{9.458132887031365232e{-}01}\NormalTok{,}\FloatTok{9.719115937133030458e{-}01}\NormalTok{,}\FloatTok{1.022463352333309539e+00}\NormalTok{,}\FloatTok{1.018376128267916458e+00}\NormalTok{,}\FloatTok{1.036782515234569546e+00}\NormalTok{,}\FloatTok{1.002151930428455406e+00}\NormalTok{,}\FloatTok{1.025899794260537012e+00}\NormalTok{],}
+\NormalTok{[}\FloatTok{1.006713557276289528e+00}\NormalTok{,}\FloatTok{1.008307042104213069e+00}\NormalTok{,}\FloatTok{1.040946528161804663e+00}\NormalTok{,}\FloatTok{1.008664966228262294e+00}\NormalTok{,}\FloatTok{1.019888284606024431e+00}\NormalTok{,}\FloatTok{9.232291698224220911e{-}01}\NormalTok{,}\FloatTok{9.946652951496551820e{-}01}\NormalTok{,}\FloatTok{9.975824334050904518e{-}01}\NormalTok{],}
+\NormalTok{[}\FloatTok{9.589669305842136726e{-}01}\NormalTok{,}\FloatTok{1.023313954237424550e+00}\NormalTok{,}\FloatTok{9.973191407360714189e{-}01}\NormalTok{,}\FloatTok{9.605969024469170892e{-}01}\NormalTok{,}\FloatTok{1.055875610975388623e+00}\NormalTok{,}\FloatTok{9.970720316926456883e{-}01}\NormalTok{,}\FloatTok{9.804426707940819830e{-}01}\NormalTok{,}\FloatTok{1.026401611463798380e+00}\NormalTok{],}
+\NormalTok{[}\FloatTok{1.005497669496447255e+00}\NormalTok{,}\FloatTok{1.041965869323389082e+00}\NormalTok{,}\FloatTok{9.550340639720691360e{-}01}\NormalTok{,}\FloatTok{1.031173009640337090e+00}\NormalTok{,}\FloatTok{1.015519623225898060e+00}\NormalTok{,}\FloatTok{1.012182333019336244e+00}\NormalTok{,}\FloatTok{1.003764230214520881e+00}\NormalTok{,}\FloatTok{9.348395964632761901e{-}01}\NormalTok{],}
+\NormalTok{[}\FloatTok{1.083433096335276735e+00}\NormalTok{,}\FloatTok{9.782418489686776075e{-}01}\NormalTok{,}\FloatTok{9.957253383740944930e{-}01}\NormalTok{,}\FloatTok{9.809332560256764921e{-}01}\NormalTok{,}\FloatTok{9.997749239282307521e{-}01}\NormalTok{,}\FloatTok{1.011633199095348878e+00}\NormalTok{,}\FloatTok{9.485159684895011489e{-}01}\NormalTok{,}\FloatTok{1.001760102199549252e+00}\NormalTok{],}
+\NormalTok{[}\FloatTok{1.006264108128872570e+00}\NormalTok{,}\FloatTok{1.004615642358778205e+00}\NormalTok{,}\FloatTok{9.636318637294639666e{-}01}\NormalTok{,}\FloatTok{1.026617284450815459e+00}\NormalTok{,}\FloatTok{9.569245090018794198e{-}01}\NormalTok{,}\FloatTok{9.704001628575262828e{-}01}\NormalTok{,}\FloatTok{1.022401342674246871e+00}\NormalTok{,}\FloatTok{1.049334928607437600e+00}\NormalTok{]}
+\NormalTok{])}
+\NormalTok{np.}\BuiltInTok{round}\NormalTok{(W, }\DecValTok{3}\NormalTok{)}
+\CommentTok{\#Search complete. Best Sidorenko ratio: {-}9.5487e{-}07}
+\CommentTok{\#Total elapsed time: 7369.60 seconds}
+\CommentTok{\#AMCS\_graphon(H, best\_W, max\_depth= 20, max\_level= 10, max\_steps = 10, epsilon = 0.3)}
+\CommentTok{\#min\_length = 0.0001}
+\BuiltInTok{print}\NormalTok{(}\SpecialStringTok{f"log(RHS / LHS) = }\SpecialCharTok{\{}\NormalTok{sidorenko\_eigenvalue\_check(W)}\SpecialCharTok{:.4e\}}\SpecialStringTok{"}\NormalTok{)}
+
+\NormalTok{W }\OperatorTok{=}\NormalTok{ np.array([}
+\NormalTok{[}\FloatTok{1.007506967405353393e+00}\NormalTok{,}\FloatTok{1.004106912614356473e+00}\NormalTok{,}\FloatTok{1.010723768125682209e+00}\NormalTok{,}\FloatTok{9.776656383596850075e{-}01}\NormalTok{],}
+\NormalTok{[}\FloatTok{1.012664396870649464e+00}\NormalTok{,}\FloatTok{9.784144224017374825e{-}01}\NormalTok{,}\FloatTok{9.987501454918620292e{-}01}\NormalTok{,}\FloatTok{1.010167532307195692e+00}\NormalTok{],}
+\NormalTok{[}\FloatTok{9.776232117805619959e{-}01}\NormalTok{,}\FloatTok{1.002646120513427608e+00}\NormalTok{,}\FloatTok{1.012408805841642723e+00}\NormalTok{,}\FloatTok{1.007322005117393893e+00}\NormalTok{],}
+\NormalTok{[}\FloatTok{1.002207255686432541e+00}\NormalTok{,}\FloatTok{1.014843899567875685e+00}\NormalTok{,}\FloatTok{9.781104730983603002e{-}01}\NormalTok{,}\FloatTok{1.004838444817784948e+00}\NormalTok{]}
+\NormalTok{])}
+\NormalTok{np.}\BuiltInTok{round}\NormalTok{(W, }\DecValTok{3}\NormalTok{)}
+\BuiltInTok{print}\NormalTok{(}\SpecialStringTok{f"log(RHS / LHS) = }\SpecialCharTok{\{}\NormalTok{sidorenko\_eigenvalue\_check(W)}\SpecialCharTok{:.4e\}}\SpecialStringTok{"}\NormalTok{)}
+\BuiltInTok{print}\NormalTok{(}\StringTok{"}\CharTok{\textbackslash{}n}\StringTok{Row sums:"}\NormalTok{, np.}\BuiltInTok{round}\NormalTok{(W.}\BuiltInTok{sum}\NormalTok{(axis}\OperatorTok{=}\DecValTok{1}\NormalTok{), }\DecValTok{8}\NormalTok{))}
+\BuiltInTok{print}\NormalTok{(}\StringTok{"Col sums:"}\NormalTok{, np.}\BuiltInTok{round}\NormalTok{(W.}\BuiltInTok{sum}\NormalTok{(axis}\OperatorTok{=}\DecValTok{0}\NormalTok{), }\DecValTok{8}\NormalTok{))}
+\CommentTok{\#AMCS\_graphon(H, best\_W, max\_depth= 30, max\_level= 6, max\_steps = 10, epsilon = cur\_ep)}
+\CommentTok{\#min\_length = 0.0001}
+\CommentTok{\#Search complete. Best Sidorenko ratio: {-}5.3620e{-}08}
+\CommentTok{\#Total elapsed time: 345.37 seconds}
+
+\NormalTok{W }\OperatorTok{=}\NormalTok{ np.array([}
+\NormalTok{[}\FloatTok{1.022544834903217570e+00}\NormalTok{,}\FloatTok{9.882808449694164832e{-}01}\NormalTok{,}\FloatTok{9.980743087708238148e{-}01}\NormalTok{,}\FloatTok{9.911096412234395858e{-}01}\NormalTok{],}
+\NormalTok{[}\FloatTok{9.897054112579033447e{-}01}\NormalTok{,}\FloatTok{1.000636987894977903e+00}\NormalTok{,}\FloatTok{9.851475614048055274e{-}01}\NormalTok{,}\FloatTok{1.024501242676079782e+00}\NormalTok{],}
+\NormalTok{[}\FloatTok{9.903961333865767269e{-}01}\NormalTok{,}\FloatTok{9.877938668725897431e{-}01}\NormalTok{,}\FloatTok{1.022352820449602184e+00}\NormalTok{,}\FloatTok{9.994461262333801388e{-}01}\NormalTok{],}
+\NormalTok{[}\FloatTok{9.973566180616084687e{-}01}\NormalTok{,}\FloatTok{1.023287326145273290e+00}\NormalTok{,}\FloatTok{9.944129254417017894e{-}01}\NormalTok{,}\FloatTok{9.849533503086042030e{-}01}\NormalTok{]}
+\NormalTok{])}
+\BuiltInTok{print}\NormalTok{(}\StringTok{"}\CharTok{\textbackslash{}n}\StringTok{Row sums:"}\NormalTok{, np.}\BuiltInTok{round}\NormalTok{(W.}\BuiltInTok{sum}\NormalTok{(axis}\OperatorTok{=}\DecValTok{1}\NormalTok{), }\DecValTok{8}\NormalTok{))}
+\BuiltInTok{print}\NormalTok{(}\StringTok{"Col sums:"}\NormalTok{, np.}\BuiltInTok{round}\NormalTok{(W.}\BuiltInTok{sum}\NormalTok{(axis}\OperatorTok{=}\DecValTok{0}\NormalTok{), }\DecValTok{8}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+log(RHS / LHS) = -2.1565e-07
+log(RHS / LHS) = -9.5487e-07
+log(RHS / LHS) = -5.3620e-08
+
+Row sums: [4.00000329 3.9999965  4.00000014 4.00000007]
+Col sums: [4.00000183 4.00001136 3.99999319 3.99999362]
+
+Row sums: [4.00000963 3.9999912  3.99998895 4.00001022]
+Col sums: [4.000003   3.99999903 3.99998762 4.00001036]
+\end{verbatim}
+
+Comments:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  For second neighborhood conjecture's AMCS, Iurii's graph building
+  strategy may need some adjustment to use that the second neighborhood
+  conjecture has been proven to be true for any oriented graph that
+  contains at least one vertex of out-degree~≤~6, and random
+  tournaments/ random directed graphs have many Seymour vertices with
+  high probability.
+\item
+  Kevin's CountHom does increase speed of counting homomorphisms for G
+  with around 15 vertices by around 100 times compared to backtrack, I
+  attempted a Monte Carlo search for the finite graph case of
+  Sidorenko's conjecture, but currently the graph building game always
+  converges to the complete graph when the amount of vertices is fixed.
+\item
+  I implemented AMCS for the matrix version provided by Professor Wei,
+  it doesn't require symmetry and can converge for 4x4 much quicker
+  (more than 10 times faster) and is scalable to 8x8 matrices. Possible
+  tendency to converge to structures with 4 extreme values on 4
+  different row/columns?
+\item
+  I also attempted AMCS for EFX, it only works for 4 agents and 6 items
+  due to speed.
+\end{enumerate}
+
+Champ graph envy: smallest subset of B's bundle that A envies.
+
+Thomas: smaller number of nodes, closer distributed computing Come up
+with RL strategy for weighted matrix Try reward function (ratio -
+1)\^{}3 Yasir: LLM RL Kevin: n = 10 sample with all possible edge counts
+, try RL and counthom algorithm with weighted case Robert: Minmax is not
+necessarily EFX
+
+Kevin's library speeds up the graphon case by a few times. RL struggles
+because the dimension of variates is too high, simpler strategies like
+multi-armed bandit did converge when I reduced the complexity. Note: All
+optimizations first converge towards a normalized doubly stochastic
+matrix (all rows and columns have the same sum), this appears to allow
+the largest eigenvalue to get closest to \(n^2\) , but as proved in
+paper, this can't directly lead to a counterexample as
+\(\lambda_1 \geq n^2\)
+
+
+
+
+\end{document}

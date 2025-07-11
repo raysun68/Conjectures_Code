@@ -117,6 +117,8 @@ W = np.array([
 ])
 np.round(W, 4)
 print(sidorenko_ratio(H, W))
+print("\nRow sums:", np.round(W.sum(axis=1), 8))
+print("Col sums:", np.round(W.sum(axis=0), 8))
 #W_initial = np.array([[0.1, 1.1, 1.3, 1.2],
 #[1.1, 1.3, 0.4, 1.1],
 #[1.3, 0.4, 0.9, 1.2],
@@ -134,6 +136,8 @@ W = np.array([
 ])
 np.round(W, 4)
 print(sidorenko_ratio(H, W))
+print("\nRow sums:", np.round(W.sum(axis=1), 8))
+print("Col sums:", np.round(W.sum(axis=0), 8))
 #W_initial = np.array([[0.1, 1.1, 1.3, 0.8],
 #[1.1, 0.5, 0.4, 1.1],
 #[1.3, 0.4, 0.9, 1.2],
@@ -151,6 +155,8 @@ W = np.array([
 ])
 np.round(W, 4)
 print(sidorenko_ratio(H, W))
+print("\nRow sums:", np.round(W.sum(axis=1), 8))
+print("Col sums:", np.round(W.sum(axis=0), 8))
 #W_initial = np.array([[0.1, 1.1, 1.3, 1.2],
 #    [1.1, 1.3, 0.4, 1.1],
 #    [1.3, 0.4, 0.9, 1.2],
@@ -169,6 +175,8 @@ W = np.array([
 ])
 np.round(W, 4)
 print(sidorenko_ratio(H, W))
+print("\nRow sums:", np.round(W.sum(axis=1), 8))
+print("Col sums:", np.round(W.sum(axis=0), 8))
 #W_initial = np.array([
     #[0.9, 1.1, 1.3, 0.8],
     #[1.1, 0.5, 0.4, 1.4],
@@ -188,6 +196,8 @@ W = np.array([
 ])
 np.round(W, 4)
 print(sidorenko_ratio(H, W))
+print("\nRow sums:", np.round(W.sum(axis=1), 8))
+print("Col sums:", np.round(W.sum(axis=0), 8))
 #W_initial = np.array([[0.1, 1.1, 1.3, 1.2],
    # [1.1, 1.3, 0.4, 1.1],
    # [1.3, 0.4, 0.9, 1.2],
@@ -205,6 +215,8 @@ W = np.array([
 ])
 np.round(W, 4)
 print(sidorenko_ratio(H, W))
+print("\nRow sums:", np.round(W.sum(axis=1), 8))
+print("Col sums:", np.round(W.sum(axis=0), 8))
 #W_initial = np.array([
     #[0.9, 1.1, 1.3, 0.8],
     #[1.1, 0.5, 0.4, 1.4],
@@ -218,13 +230,14 @@ print(sidorenko_ratio(H, W))
 #Total elapsed time: 4691.44 seconds
 
 W = np.array([
-<<<<<<< HEAD
   [9.981881920952020426e-01,9.960787975368707858e-01,9.916104719947598234e-01,1.014137493442902382e+00],
 [9.960787975368707858e-01,9.933978260588319786e-01,1.001361925434438804e+00,1.009160644897071579e+00],
 [9.916104719947598234e-01,1.001361925434438804e+00,1.016594404767061866e+00,9.904346735719898875e-01],
 [1.014137493442902382e+00,1.009160644897071579e+00,9.904346735719898875e-01,9.862515633228388090e-01]
 ])
 sidorenko_ratio(H, W)
+print("\nRow sums:", np.round(W.sum(axis=1), 8))
+print("Col sums:", np.round(W.sum(axis=0), 8))
 #W_initial = np.array([[0.8, 1.1, 1.3, 1.2],
    # [1.1, 1.3, 0.4, 1.1],
   #  [1.3, 0.4, 0.4, 1.2],
@@ -233,7 +246,7 @@ sidorenko_ratio(H, W)
 #AMCS_graphon(H, best_W, max_depth= 12, max_level= 8, max_steps = 5, epsilon = cur_ep)
 #Search complete. Best Sidorenko ratio: -2.0376e-08
 #Total elapsed time: 2876.20 seconds
-=======
+W = np.array([
   [1.016419620457121642e+00,9.954765866793205964e-01,9.924696619845138068e-01,9.956573914270188119e-01],
 [9.954765866793205964e-01,9.933100787557884725e-01,1.016065556720054497e+00,9.951186923973119880e-01],
 [9.924696619845138068e-01,1.016065556720054497e+00,9.972592334223361332e-01,9.942118906824225499e-01],
@@ -241,12 +254,13 @@ sidorenko_ratio(H, W)
 ])
 np.round(W, 4)
 sidorenko_ratio(H, W)
+print("\nRow sums:", np.round(W.sum(axis=1), 8))
+print("Col sums:", np.round(W.sum(axis=0), 8))
 #Early stopping: max|W - 1| < 0.0167
 
 #Search complete. Best Sidorenko ratio: -1.3123e-08
 #AMCS_graphon(H, best_W, max_depth= 6, max_level= 8, max_steps = 10, epsilon = 0.3)
 #Total elapsed time: 5806.97 seconds
->>>>>>> e8079aa (Matrix version)
 ```
 
 Optimization results from previous versions of AMCS, stretched/ shrunk to the same scale to compare their ratios
@@ -285,6 +299,8 @@ W = np.array([
 [1.006898802943898552e+00,1.006470554227467895e+00,1.008385183820106779e+00,9.782578339505850762e-01]
 ])
 sidorenko_ratio(H, stretch(W, 1 / (60 * np.max(abs(W - 1)))))
+print("\nRow sums:", np.round(W.sum(axis=1), 8))
+print("Col sums:", np.round(W.sum(axis=0), 8))
 
 W = np.array([
   [9.785204923248900233e-01,1.006063664598876972e+00,1.008272758742907005e+00,1.007169217624657831e+00],
@@ -293,6 +309,8 @@ W = np.array([
 [1.007169217624657831e+00,1.006152334412331317e+00,1.007911030016080955e+00,9.787831703574124687e-01]
 ])
 sidorenko_ratio(H, stretch(W, 1 / (60 * np.max(abs(W - 1)))))
+print("\nRow sums:", np.round(W.sum(axis=1), 8))
+print("Col sums:", np.round(W.sum(axis=0), 8))
 
 W = np.array([
   [1.029190107276600541e+00,9.915724844106691416e-01,9.892356910190851504e-01,9.900125185850182641e-01],
@@ -300,10 +318,11 @@ W = np.array([
 [9.892356910190851504e-01,9.930494485333212218e-01,1.024217735972285714e+00,9.934713518665881926e-01],
 [9.900125185850182641e-01,9.982377556065161750e-01,9.934713518665881926e-01,1.018277957748653817e+00]
 ])
+print("\nRow sums:", np.round(W.sum(axis=1), 8))
+print("Col sums:", np.round(W.sum(axis=0), 8))
 sidorenko_ratio(H, stretch(W, 1 / (60 * np.max(abs(W - 1)))))
 ```
 
-<<<<<<< HEAD
 Local minimizers, other H to try, expand graph H
 
 Robert: EFX code
@@ -316,10 +335,24 @@ Iurii: Penalty for 100 times for the normal one, second neighborhood 3 sinks in 
 
 (Change it to delete edges and add edges somewhere else, look at large sparse graph)
 
-Yasir: 3\*4 on 6\*6, fix entries and don't do it randomly, making it fixed graph at the beginning. Keep checking on the random sample idea, see when it has positive densities, apply to sidorenko
-=======
+# Yasir: 3\*4 on 6\*6, fix entries and don't do it randomly, making it fixed graph at the beginning. Keep checking on the random sample idea, see when it has positive densities, apply to sidorenko
 
 AMCS for matrix version: log(LHS / RHS)
+
+Comments:
+
+1.  For second neighborhood conjecture's AMCS, Iurii's graph building strategy may need some adjustment to use that the second neighborhood conjecture has been proven to be true for any oriented graph that contains at least one vertex of out-degree ≤ 6, and random tournaments/ random directed graphs have many Seymour vertices with high probability.
+
+2.  Kevin's CountHom does increase speed of counting homomorphisms for G with around 15 vertices by around 100 times compared to backtrack, I attempted a Monte Carlo search for the finite graph case of Sidorenko's conjecture, but currently the graph building game always converges to the complete graph when the amount of vertices is fixed.
+
+3.  I implemented AMCS for the matrix version provided by Professor Wei, it doesn't require symmetry and can converge for 4x4 much quicker (more than 10 times faster) and is scalable to 8x8 matrices. Possible tendency to converge to structures with 4 extreme values on 4 different row/columns?
+
+4.  I also attempted AMCS for EFX, it only works for 4 agents and 6 items due to speed.
+
+Champ graph envy: smallest subset of B's bundle that A envies.
+
+Thomas: smaller number of nodes, closer distributed computing Come up with RL strategy for weighted matrix Try reward function (ratio - 1)\^3 Yasir: LLM RL Kevin: n = 10 sample with all possible edge counts , try RL and counthom algorithm with weighted case Robert: Minmax is not necessarily EFX
+
 ```{python}
 W = np.array([
 [1.011608449121323972e+00,9.891825304526488116e-01,9.872346394532595104e-01,1.034909907127456785e+00,1.018469263228698907e+00,9.747775257968384066e-01,9.838264530439547739e-01],
@@ -330,7 +363,8 @@ W = np.array([
 [1.024857305491031489e+00,1.041553458902944707e+00,9.744585688848528271e-01,9.917960296709245060e-01,9.696222960239109234e-01,1.002132510703301005e+00,9.955368024339357191e-01],
 [1.013741721215937197e+00,9.908935352219847559e-01,1.006276958811419764e+00,9.676144445305865371e-01,1.028701843504513880e+00,9.735224686152208484e-01,1.019343359545220373e+00]
 ])
-np.round(W, 3)
+print("\nRow sums:", np.round(W.sum(axis=1), 8))
+print("Col sums:", np.round(W.sum(axis=0), 8))
 #Search complete. Best ratio: -2.1565e-07
 #Total elapsed time: 10954.29 seconds
 #AMCS_graphon(H, best_W, max_depth= 20, max_level= 10, max_steps = 10, epsilon = 0.3)
@@ -347,7 +381,8 @@ W = np.array([
 [1.083433096335276735e+00,9.782418489686776075e-01,9.957253383740944930e-01,9.809332560256764921e-01,9.997749239282307521e-01,1.011633199095348878e+00,9.485159684895011489e-01,1.001760102199549252e+00],
 [1.006264108128872570e+00,1.004615642358778205e+00,9.636318637294639666e-01,1.026617284450815459e+00,9.569245090018794198e-01,9.704001628575262828e-01,1.022401342674246871e+00,1.049334928607437600e+00]
 ])
-np.round(W, 3)
+print("\nRow sums:", np.round(W.sum(axis=1), 8))
+print("Col sums:", np.round(W.sum(axis=0), 8))
 #Search complete. Best Sidorenko ratio: -9.5487e-07
 #Total elapsed time: 7369.60 seconds
 #AMCS_graphon(H, best_W, max_depth= 20, max_level= 10, max_steps = 10, epsilon = 0.3)
@@ -362,6 +397,8 @@ W = np.array([
 ])
 np.round(W, 3)
 print(f"log(RHS / LHS) = {sidorenko_eigenvalue_check(W):.4e}")
+print("\nRow sums:", np.round(W.sum(axis=1), 8))
+print("Col sums:", np.round(W.sum(axis=0), 8))
 #AMCS_graphon(H, best_W, max_depth= 30, max_level= 6, max_steps = 10, epsilon = cur_ep)
 #min_length = 0.0001
 #Search complete. Best Sidorenko ratio: -5.3620e-08
@@ -373,25 +410,18 @@ W = np.array([
 [9.903961333865767269e-01,9.877938668725897431e-01,1.022352820449602184e+00,9.994461262333801388e-01],
 [9.973566180616084687e-01,1.023287326145273290e+00,9.944129254417017894e-01,9.849533503086042030e-01]
 ])
+print("\nRow sums:", np.round(W.sum(axis=1), 8))
+print("Col sums:", np.round(W.sum(axis=0), 8))
+
+
 ```
 
+6.30:
 
-Comments:
+Kevin's library speeds up the graphon search by a few times.
 
-1. For second neighborhood conjecture's AMCS, Iurii's graph building strategy may need some adjustment to use that the second neighborhood conjecture has been proven to be true for any oriented graph that contains at least one vertex of out-degree ≤ 6, and random tournaments/ random directed graphs have many Seymour vertices with high probability.
+RL struggles because the dimension of variates is too high, simpler strategies like multi-armed bandit did converge when I reduced the complexity. Reward function and adaptive epsilon affect convergence speed, but the results haven't changed much.
 
-2. Kevin's CountHom does increase speed of counting homomorphisms for G with around 15 vertices by around 100 times compared to backtrack, I attempted a Monte Carlo search for the finite graph case of Sidorenko's conjecture, but currently the graph building game always converges to the complete graph when the amount of vertices is fixed.
+Note: All optimizated matrices (including symmetric graphons) first converge towards a normalized doubly stochastic matrix (all rows and columns have the same sum) and then converge towards uniform, not sure if this pattern holds any significance.
 
-3. I implemented AMCS for the matrix version provided by Professor Wei, it doesn't require symmetry and can converge for 4x4 much quicker (more than 10 times faster) and is scalable to 8x8 matrices. Possible tendency to converge to structures with 4 extreme values on 4 different row/columns?
-
-4. I also attempted AMCS for EFX, it only works for 4 agents and 6 items due to speed.
-
-Champ graph envy: smallest subset of B's bundle that A envies. 
-
-Thomas: smaller number of nodes, closer
-distributed computing
-Come up with RL strategy for weighted matrix
-Try reward function (ratio - 1)^3
-Yasir: LLM RL 
-Kevin: n = 10 sample with all possible edge counts , try RL and counthom algorithm with weighted case
-Robert: Minmax is not necessarily EFX, 
+The conjecture is equivalent to $\lambda_1^5 + \lambda_2^5... \lambda_n^5 \geq n^{10}$ . The optimization appears to allow the largest eigenvalue to get closest to $n^2$ , but this can't directly lead to a counterexample since ranking the eigenvalues in descending order, there is $\lambda_1 \geq n^2$ (proved) and empirically $\lambda_2 + \lambda_n \geq 0$ , $\lambda_3 + \lambda_{n-1} \geq 0$ ... (No counterexample found yet) Next step could be exploring structure of the eigenvalues.

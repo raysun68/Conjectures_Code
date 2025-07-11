@@ -128,22 +128,113 @@ def perturb(W, epsilon):
     W_new = W_new / np.mean(W_new)
     return W_new, perturbation
 
-def perturb_Eigen(W, epsilon, max_attempts=5000):
+import numpy as np
+
+def perturb_Eigen(W, epsilon):
     """
-    Applies asymmetric perturbation to W and rejects matrices with negative entries.
+    Applies a safe asymmetric perturbation to W such that:
+    - All entries remain nonnegative.
+    - The mean is preserved (normalization).
+    """
+    W = np.asarray(W)
+    original_mean = np.mean(W)
+    
+    # Entrywise: max allowable negative perturbation without going below 0
+    lower_bounds = -np.minimum(W, epsilon)
+    upper_bounds = np.full_like(W, epsilon)
+    
+    # Sample entrywise perturbations in valid asymmetric ranges
+    perturbation = np.random.uniform(lower_bounds, upper_bounds)
+    
+    # Center the perturbation so total sum is zero (preserves row/col sums roughly)
+    perturbation -= np.mean(perturbation)
+
+    # Apply perturbation
+    W_new = W + perturbation
+    
+    # Ensure nonnegativity due to possible rounding errors
+    W_new = np.maximum(W_new, 0)
+
+    # Normalize mean back to original
+    new_mean = np.mean(W_new)
+    if new_mean > 0:
+        W_new *= (original_mean / new_mean)
+    
+    return W_new, perturbation
+
+import numpy as np
+
+def multiplicative_perturbation_subgrid(W, epsilon, grid_size=4, rng=None):
+    """
+    Multiplies each weight in a random subgrid by a factor in (1 - ε, 1 + ε),
+    then rescales the matrix to keep global mean = 1.
+    """
+    if rng is None:
+        rng = np.random.default_rng()
+
+    m, n = W.shape
+    i0 = rng.integers(0, m - grid_size + 1)
+    j0 = rng.integers(0, n - grid_size + 1)
+
+    # Generate multiplicative factors
+    mult = rng.uniform(epsilon, 1 / epsilon, size=(grid_size, grid_size))
+
+    # Apply multiplicative perturbation to a subgrid
+    W_new = W.copy()
+    W_new[i0:i0 + grid_size, j0:j0 + grid_size] *= mult
+
+    # Rescale to keep mean exactly 1
+    W_new /= np.mean(W_new)
+
+    return W_new, mult
+
+
+def perturb_Eigen_fix(W, epsilon, fixed_count=20, seed=43, max_attempts=5000):
+    """
+    Applies asymmetric perturbation to W, while keeping `fixed_count` randomly chosen
+    entries near 1.0 (in range 0.999 to 1.001). These entries remain unperturbed.
+
+    Parameters:
+        W: np.ndarray - base weight matrix
+        epsilon: float - perturbation magnitude
+        fixed_count: int - number of fixed near-1 entries
+        seed: int - RNG seed for fixed position selection
+        max_attempts: int - number of tries to get non-negative perturbed matrix
+
+    Returns:
+        W_new: np.ndarray - perturbed matrix
+        perturbation: np.ndarray - actual perturbation (0 at fixed entries)
     """
     original_mean = np.mean(W)
+    shape = W.shape
+    size = W.size
+
+    rng = np.random.default_rng(seed)
+    flat_indices = rng.choice(size, size=fixed_count, replace=False)
+    fixed_positions = np.unravel_index(flat_indices, shape)
+    fixed_mask = np.zeros_like(W, dtype=bool)
+    fixed_mask[fixed_positions] = True
 
     for _ in range(max_attempts):
         perturbation = np.random.uniform(-epsilon, epsilon, size=W.shape)
         perturbation -= np.mean(perturbation)
+
+        # Zero perturbation for fixed entries
+        perturbation[fixed_mask] = 0.0
+
         W_new = W + perturbation
 
+        # Set fixed entries to values very close to 1
+        W_new[fixed_mask] = rng.uniform(0.999, 1.001, size=fixed_count)
+
         if np.all(W_new >= 0):
-            new_mean = np.mean(W_new)
+            non_fixed_mask = ~fixed_mask
+            new_mean = np.mean(W_new[non_fixed_mask])
             if new_mean > 0:
-                W_new *= (original_mean / new_mean)
+                scale = original_mean / new_mean
+                W_new[non_fixed_mask] *= scale
             return W_new, perturbation
+
 
     raise RuntimeError("Failed to generate a valid perturbation without negative entries.")
 
@@ -173,6 +264,7 @@ def build_tilde_M(M):
 def sidorenko_eigenvalue_check(M):
     """
     Spectral test for Sidorenko-type inequalities using tilde_M eigenvalue moments.
+    Reward = -(2nd largest eigenvalue + smallest eigenvalue).
     """
     M = np.maximum(M, 0)
     M = np.nan_to_num(M, nan=0.0, posinf=1.0, neginf=0.0)
@@ -186,6 +278,27 @@ def sidorenko_eigenvalue_check(M):
         print("Warning: tilde_M is not symmetric")
 
     eigenvalues = np.linalg.eigvalsh(tilde_M)
+
+    # Sort in increasing order
     lhs = np.sum(eigenvalues**5)
     rhs = (np.sum(M))**15 / (M.size)**10
-    return ((rhs / lhs - 1) ** 3) # Reward function that can be modified
+  # return (rhs / lhs - 1)
+    return -(eigenvalues[0] + eigenvalues[-2])
+
+def normalize_to_fixed_Linf_and_zero_mean(P):
+    P = P - np.mean(P)
+    max_abs = np.max(np.abs(P))
+    if max_abs == 0:
+        P = np.random.uniform(-1, 1, size=P.shape)
+        P -= np.mean(P)
+        max_abs = np.max(np.abs(P))
+    return P / max_abs
+
+def update_W_strict_Linf(W_prev, P_prev, epsilon=0.02, rng=None):
+    if rng is None:
+        rng = np.random.default_rng()
+    delta = rng.uniform(-epsilon, epsilon, size=P_prev.shape)
+    P_new = P_prev + delta
+    P_new = normalize_to_fixed_Linf_and_zero_mean(P_new)
+    W_new = 1 + 0.1 * P_new
+    return W_new, P_new

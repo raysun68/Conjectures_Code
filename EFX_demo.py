@@ -110,7 +110,7 @@ def AMCS_util(U_init, max_depth=8, max_level=6, max_steps=10, epsilon=0.1):
 # --- Main ---
 if __name__ == "__main__":
     num_agents = 4
-    num_items = 6
+    num_items = 7
     epsilon = 0.2
     min_epsilon = 0.005
     patience_limit = 5
