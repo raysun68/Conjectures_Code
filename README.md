@@ -8,9 +8,13 @@
  
  `helpers.py`: Python script inlcuding many helper functions such as reward functions.
 
+ `PPO_NMCS.py` implements proximal policy optimization for Sidorenko's Conjecture
+
+ `Latin_Search.py` implements optimization for Latin Square graphons in Sidorenko's Conjecture
+
  Run the code with `python Graphon_demo.py`.
 
-### AMCS for the eigenvalue matrix version of Sidorenko's conjecture:
+### AMCS for the spectral version of Sidorenko's conjecture:
 
 `Eigen_demo.py`:  Python script implementing AMCS for an initial matrix (you may customize or randomize it) and parameters, works for up to 8*8 matrices.
 
@@ -18,13 +22,17 @@
 
  Run the code with `python Eigen_demo.py`.
 
-### AMCS for EFX conjecture: (Work in progress)
+### AMCS for EFX conjecture: 
 
 `EFX_demo.py`: Python script implementing AMCS for initial utilities, works for 4 agents and 7 items.
 
 `efxcpp.cpp`: C++ script to speed up brute force allocation searching.
 
 Run the code with `python EFX_demo.py`.
+
+### 
+
+###
 
 ## Other Files
 
