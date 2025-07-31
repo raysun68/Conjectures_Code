@@ -30,9 +30,9 @@
 
 Run the code with `python EFX_demo.py`.
 
-### 
+### Dominant Exponent Bounds
+`estimate_C5_C3.py`: Python script to improve lower bounds of homomorphism domination exponent C(C5,C3)
 
-###
 
 ## Other Files
 
